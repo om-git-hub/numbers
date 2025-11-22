@@ -402,7 +402,6 @@ async function mergeAndPlay(files){
 
     if(buffers.length === 0) return;
 
-    // total length mono
     let totalLen = buffers.reduce((sum, b) => sum + b.length, 0);
     let output = ctx.createBuffer(1, totalLen, ctx.sampleRate);
 
@@ -415,6 +414,7 @@ async function mergeAndPlay(files){
     const src = ctx.createBufferSource();
     src.buffer = output;
     src.connect(ctx.destination);
+    src.playbackRate.value = 1.25; // 1.0 = normal, 1.25 = 25% faster, 1.5 = 50% faster
     src.start(0);
 }
 
