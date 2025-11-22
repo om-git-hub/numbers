@@ -374,39 +374,57 @@ function convert(){
 //                   AUDIO SUPPORT
 // ======================================================
 const SOUNDS_FOLDER = "sounds/";
-let audioQueue = [];
-let isPlaying = false;
 
-function playNextInQueue(){
-    if(audioQueue.length === 0){
-        isPlaying = false;
-        return;
-    }
-    isPlaying = true;
-
-    const token = audioQueue.shift();
-    if(!token || token.trim() === ""){
-        playNextInQueue();
-        return;
-    }
-
-    const fileUrl = SOUNDS_FOLDER + token + ".mp3";
-    const a = new Audio(fileUrl);
-
-    a.playbackRate = 1.25; 
-
-    a.onerror = function(){ playNextInQueue(); };
-    a.onended = function(){ playNextInQueue(); };
-
-    a.play().catch(()=>{ playNextInQueue(); });
+// 🔥 NEW speakText: merged audio playback
+function wordsToAudioList(text){
+    if(!text) return [];
+    return text.trim().split(/\s+/).map(w => SOUNDS_FOLDER + w + ".mp3");
 }
 
+async function mergeAndPlay(files){
+    if(!files || files.length === 0) return;
+
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const buffers = [];
+
+    for(let f of files){
+        try{
+            const resp = await fetch(f);
+            if(!resp.ok) continue;
+            const arr = await resp.arrayBuffer();
+            const buf = await ctx.decodeAudioData(arr);
+            buffers.push(buf);
+        } catch(e){
+            console.warn("Could not load", f, e);
+            continue;
+        }
+    }
+
+    if(buffers.length === 0) return;
+
+    // total length mono
+    let totalLen = buffers.reduce((sum, b) => sum + b.length, 0);
+    let output = ctx.createBuffer(1, totalLen, ctx.sampleRate);
+
+    let offset = 0;
+    for(let b of buffers){
+        output.getChannelData(0).set(b.getChannelData(0), offset);
+        offset += b.length;
+    }
+
+    const src = ctx.createBufferSource();
+    src.buffer = output;
+    src.connect(ctx.destination);
+    src.start(0);
+}
+
+// replace old speakText with merged audio
 function speakText(text){
-    const tokens = text.trim().split(/\s+/);
-    audioQueue = tokens.slice();
-    if(!isPlaying) playNextInQueue();
+    const list = wordsToAudioList(text);
+    mergeAndPlay(list);
 }
 
+// hook to convert button
 document.addEventListener("DOMContentLoaded", function(){
     const btn = document.querySelector('button[onclick="convert()"]');
     if(!btn) return;
