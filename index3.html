@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Learn</title>
+<style>
+  .back-container {
+    width: 100%;
+    text-align: center;
+    margin: 25px 0;
+  }
+
+  .back-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+    transition: 0.2s ease-in-out;
+  }
+
+  .back-btn:hover {
+    background: #1e4fcc;
+    transform: translateY(-2px);
+  }
+</style>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; 
+      line-height: 1.6; 
+      padding: 20px; 
+      color: #111;
+      margin: 0; 
+    }
+    header {
+      max-width: 900px; 
+      margin: 0 auto 24px;
+    }
+    h1 {
+      font-size: 24px; 
+      margin-bottom: 6px;
+    }
+    h2 {
+      font-size: 20px; 
+      margin-top: 18px;
+    }
+    .card {
+      max-width: 900px; 
+      margin: 0 auto; 
+      padding: 18px; 
+      border-radius: 12px; 
+      box-shadow: 0 6px 18px rgba(20, 20, 40, 0.06); 
+      background: #fff;
+    }
+    table {
+      width: 100%; 
+      max-width: 800px; 
+      border-collapse: collapse; 
+      margin-top: 10px;
+      overflow-x: auto; 
+    }
+    th, td {
+      padding: 8px; 
+      border: 1px solid #e6e6e9; 
+      text-align: left;
+    }
+    code {
+      background: #f6f7fb; 
+      padding: 2px 6px; 
+      border-radius: 6px; 
+      font-family: monospace;
+    }
+    .note {
+      font-size: 14px; 
+      color: #444; 
+      margin-top: 8px;
+    }
+    
+    /* Custom Play Button Styling */
+    .custom-play-button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      min-width: 70px; /* To prevent button resizing when text changes */
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .custom-play-button:hover {
+      background: #0056b3;
+    }
+    
+    /* We must hide the audio element since we removed the 'controls' attribute */
+    .hidden-audio {
+        display: none; 
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px; 
+      }
+      h1 {
+        font-size: 20px; 
+      }
+      h2 {
+        font-size: 18px; 
+      }
+      th, td {
+        padding: 6px; 
+      }
+      .card {
+        padding: 12px; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>How to Read and Write in Afaan Oromoo (English explanation)</h1>
+    <p class="note">Simple, step-by-step explanation on Oromo alphabet, pronunciation, and examples.</p>
+  </header>
+  <main class="card">
+    <section>
+      <h2>1. The Oromo Alphabet (Qubee Afaan Oromoo)</h2>
+      <p>Afaan Oromoo uses the <strong>Latin alphabet</strong> (like English), but with a few extra letters that represent special Oromo sounds.</p>
+      <p>It has <strong>34 letters</strong>:</p>
+      <p><code>A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, Ch, Dh, Ny, Ph, Sh, Ts, Zy, (')</code></p>
+     <p>Each sound is written the same way it’s spoken — that’s one of the easiest things about reading Oromo!</p>
+      <p>There are 5 vowels and 29 consonants in Afaan Oromoo</p>
+    </section>
+    <section>
+      <h2>2. Alphabet Name, Sound and Letter Relationship</h2>
+      <p>Each letter (or pair like <code>dh</code>, <code>sh</code>, <code>ny</code>) represents one sound.</p>
+      <ul>
+        <li><code>a</code> → as in "father"</li>
+        <li><code>b</code> → as in "boy"</li>
+        <li><code>dh</code> → a soft "d" sound (no exact English equivalent)</li>
+        <li><code>ny</code> → like the <em>ñ</em> in "canyon"</li>
+        <li><code>sh</code> → as in "shoe"</li>
+      </ul>
+   <h2> All Afaan Oromo Alphabetical Name with Audio </h2>
+      <table>
+        <thead>
+          <tr><th>Letter</th><th>Audio</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A</td>
+            <td>
+              <audio id="audio-a" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//0/0d/Om-a.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-a', this)">Play</button>
+            </td>
+          </tr>
+       <tr>
+            <td>B</td>
+            <td>
+              <audio id="audio-b" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//c/cb/Om-b.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-b', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td>
+              <audio id="audio-c" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//c/c3/Om-c.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-c', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td>
+              <audio id="audio-d" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//4/49/Om-d.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-d', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>E</td>
+            <td>
+              <audio id="audio-e" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//1/1d/Om-e.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-e', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>F</td>
+            <td>
+              <audio id="audio-f" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//0/01/Om-f.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-f', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>G</td>
+            <td>
+              <audio id="audio-g" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//6/65/Om-g.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-g', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>H</td>
+            <td>
+              <audio id="audio-h" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//4/48/Om-h.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-h', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>I</td>
+            <td>
+              <audio id="audio-i" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//d/d1/Om-i.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-i', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>J</td>
+            <td>
+              <audio id="audio-j" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//c/cc/Om-j.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-j', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>K</td>
+            <td>
+              <audio id="audio-k" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//6/6c/Om-k.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-k', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>L</td>
+            <td>
+              <audio id="audio-l" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//4/46/Om-l.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-l', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>M</td>
+            <td>
+              <audio id="audio-m" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//1/10/Om-m.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-m', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>N</td>
+            <td>
+              <audio id="audio-n" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//4/43/Om-n.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-n', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>O</td>
+            <td>
+              <audio id="audio-o" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//1/14/Om-o.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-o', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>P</td>
+            <td>
+              <audio id="audio-p" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//f/fa/Om-p.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-p', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Q</td>
+            <td>
+              <audio id="audio-q" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//d/d0/Om-q.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-q', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>R</td>
+            <td>
+              <audio id="audio-r" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//b/be/Om-r.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-r', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>S</td>
+            <td>
+              <audio id="audio-s" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//7/7c/Om-s.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-s', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>T</td>
+            <td>
+              <audio id="audio-t" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//0/0b/Om-t.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-t', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>U</td>
+            <td>
+              <audio id="audio-u" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//4/46/Om-u.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-u', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>V</td>
+            <td>
+              <audio id="audio-v" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//7/7c/Om-v.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-v', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>W</td>
+            <td>
+              <audio id="audio-w" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//0/0e/Om-w.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-w', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>X</td>
+            <td>
+              <audio id="audio-x" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//b/bd/Om-x.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-x', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Y</td>
+            <td>
+              <audio id="audio-y" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//8/86/Om-y.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-y', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Z</td>
+            <td>
+              <audio id="audio-z" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//d/d2/Om-z.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-z', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Ch</td>
+            <td>
+              <audio id="audio-ch" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//c/c1/Om-ch.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-ch', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Dh</td>
+            <td>
+              <audio id="audio-dh" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//7/71/Om-dh.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-dh', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Ny</td>
+            <td>
+              <audio id="audio-ny" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//8/88/Om-ny.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-ny', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Ph</td>
+            <td>
+              <audio id="audio-ph" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//6/61/Om-ph.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-ph', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Sh</td>
+            <td>
+              <audio id="audio-sh" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//d/dc/Om-sh.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-sh', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Ts</td>
+            <td>
+              <audio id="audio-ts" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//4/48/Om-ts.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-ts', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Zy</td>
+            <td>
+              <audio id="audio-zh" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//3/35/Om-zy.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-zh', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>(') Hudhaa (apostrophe)</td>
+            <td>
+              <audio id="audio-hudhaa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//1/12/Om-hudhaa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-hudhaa', this)">Play</button>
+            </td>
+          </tr>
+     </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>3. Short and Long Vowels</h2>
+      <p>Vowel length changes meaning! Short vowels are written once; long vowels are written twice.</p>
+      <table>
+        <thead>
+          <tr><th>Word</th><th>Meaning</th><th>Pronunciation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Laga</strong></td>
+            <td>River</td>
+            <td>Short 'a' sound, as in 'cut'.</td>
+          </tr>
+          <tr>
+            <td><strong>Laagaa</strong></td>
+            <td>Tongue/Palate</td>
+            <td>Long 'aa' sound, as in 'father'.</td>
+          </tr>
+          <tr>
+            <td><strong>Harka</strong></td>
+            <td>Hand</td>
+            <td>Short 'a' sound.</td>
+          </tr>
+          <tr>
+            <td><strong>Haaraa</strong></td>
+            <td>New</td>
+            <td>Long 'aa' sound.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+ <section>
+<h2>Examples </h2>
+ <table>
+        <thead>
+          <tr><th>Letter</th><th>Audio</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>La</td>
+            <td>
+              <audio id="audio-la" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//7/78/Om-la.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-la', this)">Play</button>
+            </td>
+          </tr>
+       <tr>
+            <td>Ga</td>
+            <td>
+              <audio id="audio-ga" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//7/7d/Om-ga.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-ga', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Laa</td>
+            <td>
+              <audio id="audio-laa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//f/f6/Om-laa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-laa', this)">Play</button>
+            </td>
+          </tr>
+       <tr>
+            <td>Gaa</td>
+            <td>
+              <audio id="audio-gaa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//3/3b/Om-gaa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-gaa', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Laga</td>
+            <td>
+              <audio id="audio-laga" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//2/2f/Om-laga.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-laga', this)">Play</button>
+            </td>
+          </tr>
+       <tr>
+            <td>Laagaa</td>
+            <td>
+              <audio id="audio-laagaa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//9/9d/Om-laagaa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-laagaa', this)">Play</button>
+            </td>
+          </tr>
+         </tbody>
+      </table>
+</section>
+    <section>
+      <h2>4. Strong and Soft Consonants or Sound or Syllable </h2>
+      <p>Consonant strength changes meaning! Soft consonans are written once; Strong consonants are written twice.</p>
+      <table>
+        <thead>
+          <tr><th>Word</th><th>Meaning</th><th>Pronunciation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Balaa</strong></td>
+            <td>Accident</td>
+            <td>Soft 'l' sound, as in 'long'.</td>
+          </tr>
+          <tr>
+            <td><strong>Baallaa</strong></td>
+            <td>forked or y-shaped wood</td>
+            <td>Strong 'll' sound (no exact English equivalent).</td>
+          </tr>
+          <td><strong>Baala</strong></td>
+            <td>Leaf</td>
+            <td>Soft 'l' sound, as in 'legg'.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+        <h2>Examples </h2>
+      <table>
+        <thead>
+          <tr><th>Letter</th><th>Audio</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>baallaa</td>
+            <td>
+              <audio id="audio-baallaa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//0/09/Om-baallaa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-baallaa', this)">Play</button>
+            </td>
+          </tr>
+       <tr>
+            <td>Balaa</td>
+            <td>
+              <audio id="audio-balaa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//3/30/Om-balaa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-balaa', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Baala</td>
+            <td>
+              <audio id="audio-baala" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//c/cf/Om-baala.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-baala', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Faallaa</td>
+            <td>
+              <audio id="audio-faallaa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//4/42/Om-faallaa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-faallaa', this)">Play</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Ballaa</td>
+            <td>
+              <audio id="audio-ballaa" class="hidden-audio" src="https://upload.wikimedia.org/wikipedia/commons//b/bd/Om-ballaa.ogg"></audio>
+              <button class="custom-play-button" onclick="togglePlay('audio-ballaa', this)">Play</button>
+            </td>
+          </tr>
+         </tbody>
+      </table>
+     </section>
+     </main>
+
+  <script>
+    // Global variable to keep track of the currently playing audio element
+    let currentAudio = null;
+
+    /**
+     * Toggles play/pause for a specific audio element and updates the button text.
+     * Also pauses any other currently playing audio.
+     * @param {string} audioId - The ID of the audio element to control (e.g., 'audio-a').
+     * @param {HTMLElement} buttonElement - The button element that was clicked.
+     */
+    function togglePlay(audioId, buttonElement) {
+        const audioElement = document.getElementById(audioId);
+
+        // 1. If another audio is playing, pause it and reset its button text
+        if (currentAudio && currentAudio !== audioElement) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0; // Rewind the old audio
+            // Find the button associated with the old audio to reset its text
+            const oldButton = document.querySelector(`[onclick*='${currentAudio.id}']`);
+            if (oldButton) {
+                oldButton.textContent = 'Play';
+                oldButton.style.backgroundColor = '#007bff';
+            }
+        }
+
+        // 2. Play or Pause the clicked audio
+        if (audioElement.paused) {
+            audioElement.play().then(() => {
+                buttonElement.textContent = 'Pause';
+                buttonElement.style.backgroundColor = '#dc3545'; // Change to red for pause
+                currentAudio = audioElement;
+            }).catch(error => {
+                console.error("Autoplay failed:", error);
+                // Handle case where browser blocks autoplay (e.g., show a message)
+                buttonElement.textContent = 'Error';
+            });
+        } else {
+            audioElement.pause();
+            buttonElement.textContent = 'Play';
+            buttonElement.style.backgroundColor = '#007bff'; // Change back to blue
+            currentAudio = null;
+        }
+
+        // 3. Add an event listener to reset the button when the audio finishes playing
+        audioElement.onended = function() {
+            buttonElement.textContent = 'Play';
+            buttonElement.style.backgroundColor = '#007bff';
+            currentAudio = null;
+            audioElement.currentTime = 0; // Rewind for next play
+        };
+    }
+  </script>
+<div class="back-container">
+  <a href="index.html" class="back-btn">⌂ Back to Home</a>
+</div></body>
+</html>

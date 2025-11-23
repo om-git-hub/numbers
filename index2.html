@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="om">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Oromo Syllabifier</title>
+
+<style>
+  .back-container {
+    width: 100%;
+    text-align: center;
+    margin: 25px 0;
+  }
+
+  .back-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+    transition: 0.2s ease-in-out;
+  }
+
+  .back-btn:hover {
+    background: #1e4fcc;
+    transform: translateY(-2px);
+  }
+</style>
+<style>
+  body{
+    margin:0;
+    background:linear-gradient(135deg,#f7f9fc,#eef1ff);
+    font-family:system-ui,Segoe UI,Roboto,Arial;
+    padding:30px;
+    color:#111;
+  }
+
+  .card{
+    max-width:720px;
+    margin:0 auto;
+    background:white;
+    padding:40px;
+    border-radius:18px;
+    box-shadow:0 12px 45px rgba(0,0,50,0.9);
+    border:0px solid #f0f4ff;
+  }
+
+  h1{
+    font-size:26px;
+    margin:0 0 0px;
+    font-weight:600;
+    text-align:center;
+    color:#0b1a4a;
+  }
+
+  #word{
+    width:100%;
+    padding:18px;
+    border-radius:14px;
+    font-size:20px;
+    border:0.5px solid #ccd6ee;
+    outline:none;
+    transition:0.2s;
+  }
+  #word:focus{
+    border-color:#4c7dff;
+    box-shadow:0 0 0 2px #dfe7ff;
+  }
+
+  .row{
+    margin-top:18px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+  }
+
+  button{
+    padding:14px 18px;
+    border-radius:12px;
+    font-size:18px;
+    border:0;
+    cursor:pointer;
+    transition:0.2s;
+    min-width:120px;
+  }
+
+  #go{
+    background:#2962ff;
+    color:white;
+  }
+  #go:hover{ background:#1749cc; }
+
+  #clear{
+    background:#eef3ff;
+    color:#222;
+    border:1px solid #d6def8;
+  }
+  #clear:hover{
+    background:#dfe7ff;
+  }
+
+  pre{
+    background:#0e1226;
+    color:#e8eefc;
+    padding:20px;
+    border-radius:12px;
+    margin-top:20px;
+    white-space:pre-wrap;
+    font-size:22px;
+  }
+
+  #count{
+    background:#f2f5ff;
+    color:#333;
+    border:1px solid #d9e2ff;
+    font-size:20px;
+  }
+
+</style>
+</head>
+
+<body>
+<div class="card">
+    <h1>Oromo Syllabifier</h1>
+
+    <input id="word" placeholder="Jecha galchi...">
+
+    <div class="row">
+        <button id="go">Split</button>
+        <button id="clear">Clear</button>
+    </div>
+
+    <pre id="result">Result appears here</pre>
+    <pre id="count">-</pre>
+</div>
+
+<script>
+(() => {
+
+  /* DOUBLE-CONSONANT MAP */
+  const dcMap = {
+    "ch":"Ç","dh":"Ð","ny":"Ñ",
+    "ph":"Þ","ts":"Ŧ","sh":"Š","zy":"Ž"
+  };
+  const APOST = "Ƶ";
+  const revMap = Object.fromEntries(Object.entries(dcMap).map(([k,v])=>[v,k]));
+
+  /* -------------- ★ NEW RULE ★ --------------
+     If space + vowel → change to 'vowel before normalization
+     Example: "ba aanaa" → "ba 'aanaa"
+  ------------------------------------------------ */
+  function preprocessSpaces(str){
+      return str.replace(/ ([aeiouAEIOU])/g, " '$1");
+  }
+
+  function normalize(w){
+    let s = preprocessSpaces(w.toLowerCase());
+
+    for(const k of Object.keys(dcMap))
+        s = s.split(k).join(dcMap[k]);
+
+    return s.replace(/'/g, APOST);
+  }
+
+  function unNormalizePiece(p){
+    let s = p;
+    for(const [v,k] of Object.entries(revMap)) 
+        s = s.split(v).join(k);
+    return s.split(APOST).join("'");
+  }
+
+  const placeholders = Object.values(dcMap).join('') + APOST;
+
+  const isV = ch => ch && "aeiou".includes(ch);
+  const isC = ch => ch && (placeholders.includes(ch) ||
+      (/^[a-z]$/i.test(ch) && !"aeiou".includes(ch)));
+
+  /* --- BACKWARD SYLLABLE EXTRACTION LOGIC (unchanged) --- */
+  function extractEnd(norm){
+    const L = norm.length;
+    const s=i=>norm[i]||"";
+
+    if(L>=5){
+      const [c1,c2,v1,v2,c3]=[s(L-5),s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(c1)&&isC(c2)&&isV(v1)&&isV(v2)&&isC(c3)&&c1!==c2) return norm.slice(L-4);
+    }
+    if(L>=4){
+      const [c1,c2,v,c3]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(c1)&&isC(c2)&&isV(v)&&isC(c3)&&c1!==c2) return norm.slice(L-3);
+    }
+    if(L>=4){
+      const [c1,c2,v1,v2]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(c1)&&isC(c2)&&isV(v1)&&isV(v2)&&c1!==c2) return norm.slice(L-3);
+    }
+    if(L>=3){
+      const [cprev,c,v]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(cprev)&&isC(c)&&isV(v)&&cprev!==c) return norm.slice(L-2);
+    }
+
+    if(L>=5){
+      const [a,b,c,d,e]=[s(L-5),s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)&&isV(d)&&isC(e)) return norm.slice(L-5);
+    }
+    if(L>=4){
+      const [a,b,c,d]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)&&isC(d)) return norm.slice(L-4);
+    }
+    if(L>=4){
+      const [a,b,c,d]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)&&isV(c)&&isC(d)) return norm.slice(L-4);
+    }
+    if(L>=3){
+      const [a,b,c]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)&&isC(c)) return norm.slice(L-3);
+    }
+
+    if(L>=4){
+      const [a,b,c,d]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)&&isV(d)) return norm.slice(L-4);
+    }
+    if(L>=3){
+      const [a,b,c]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)) return norm.slice(L-3);
+    }
+    if(L>=3){
+      const [a,b,c]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)&&isV(c)) return norm.slice(L-3);
+    }
+    if(L>=2){
+      const [a,b]=[s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)) return norm.slice(L-2);
+    }
+    return norm.slice(-1);
+  }
+
+  function backwardSegments(norm){
+    const pieces=[];
+    while(norm.length>0){
+      const end=extractEnd(norm);
+      pieces.push(end);
+      norm=norm.slice(0,norm.length-end.length);
+    }
+    return pieces;
+  }
+
+  function applyStartVowelRule(original){
+    if(!original) return original;
+    return "aeiou".includes(original[0].toLowerCase()) ? "'" + original : original;
+  }
+
+  function splitAndDisplay(word){
+    const withStart=applyStartVowelRule(word);
+    const norm=normalize(withStart.trim());
+    const parts=backwardSegments(norm).reverse();
+    return parts.map(unNormalizePiece).join("-");
+  }
+
+  function syllableCount(str){
+      const total = str.split("-").length;
+      const spaces = (str.match(/ /g) || []).length;
+      return total - spaces;
+  }
+
+  const inp=document.getElementById("word");
+  const out=document.getElementById("result");
+  const cnt=document.getElementById("count");
+
+  document.getElementById("go").addEventListener("click",()=>{
+    const raw=inp.value.trim();
+    if(!raw){ out.textContent=""; cnt.textContent="-"; return; }
+    const outStr=splitAndDisplay(raw);
+    out.textContent=outStr;
+    cnt.textContent=syllableCount(outStr);
+  });
+
+  document.getElementById("clear").addEventListener("click",()=>{
+    inp.value="";
+    out.textContent="";
+    cnt.textContent="-";
+    inp.focus();
+  });
+
+})();
+</script>
+<!-- BACK TO HOME BUTTON -->
+<div class="back-container">
+  <a href="index.html" class="back-btn">
+    ⌂ Back to Home
+  </a>
+</div>
+</body>
+</html>
