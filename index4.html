@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afaan Oromo Morphology & Verb Conjugation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Afaan Oromo Morphology & Verb Conjugation</h2>
+
+<div class="box">
+<div class="radio-group">
+    <label class="radio-btn">
+        <input type="radio" name="wordType" value="noun" checked>
+        <span>Noun</span>
+    </label>
+    <label class="radio-btn">
+        <input type="radio" name="wordType" value="verb">
+        <span>Verb</span>
+    </label>
+</div>
+
+    <input id="wordInput" placeholder="Jecha galchi..."> <br><br>
+    <button id="processBtn">SUBMIT</button>
+
+    <div class="result" id="output"></div>
+</div>
+
+<script src="morphology.js"></script>
+<script src="conjugation.js"></script>
+<script src="script.js"></script>
+
+<h3>How To Use</h3>
+
+<p>
+✔️ If you want to work with <b>nouns</b>, select the <b>Noun</b> option above.  
+Then enter any Oromo noun and click <b>SUBMIT</b>.  
+The engine will generate all morphological forms including:
+Absolutive, Nominative, Accusative, and Genitive — both singular and plural.
+</p>
+
+<p>
+✔️ If you want to work with <b>verbs</b>, select the <b>Verb</b> option above.  
+Enter any Oromo infinitive verb... <b> Exam - deemuu, rukutuu, cabsuu</b>  and click <b>SUBMIT</b>.  
+The system will display conjugations.
+</p>
+
+<p>
+💡 This tool performs two major functions:<br>
+1) <b>Noun Morphology Generator</b> <br> 
+2) <b>Verb Conjugation Engine</b>
+</p>
+
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+body{
+    font-family: system-ui,Segoe UI,Roboto,Arial;
+    background:#f5f6ff;
+    padding:20px;
+}
+h1{text-align:center;color:#333;}
+.box{
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    max-width:600px;
+    margin:0 auto;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+input[type="text"]{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    margin-bottom:10px;
+    border-radius:6px;
+    border:1px solid #bbb;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#4e6bff;
+    color:white;
+    font-size:16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:hover{ background:#3a55e5; }
+.result{
+    margin-top:15px;
+    padding:12px;
+    background:#eef;
+    border-radius:6px;
+    white-space:pre-line;
+    font-size:15px;
+}
+.radio-group{
+    margin-bottom:10px;
+}
