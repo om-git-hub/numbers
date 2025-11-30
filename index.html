@@ -3,45 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menu Page</title>
+<title>Bilida – Afaan Oromoo Learning</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f3f4f6;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-    }
-    h2 {
-        margin-bottom: 20px;
-    }
-    .btn {
-        background: #e563eb;
-        color: white;
-        padding: 14px 30px;
-        margin: 10px;
-        font-size: 18px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        width: 200px;
-    }
-    .btn:hover {
-        background: #1e4fd8;
-    }
+  body{
+    margin:0;
+    padding:0;
+    font-family: "Segoe UI", Arial;
+    background: #f4f6ff;
+  }
+
+  header{
+    background: #4154f1;
+    padding: 20px;
+    text-align:center;
+    color:white;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .container{
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .title{
+    text-align:center;
+    font-size: 22px;
+    margin: 20px 0;
+    font-weight: 600;
+  }
+
+  .cards{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+  }
+
+  .card{
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align:center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.3s;
+  }
+
+  .card:hover{
+    transform: scale(1.04);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    cursor:pointer;
+  }
+
+  .card a{
+    text-decoration:none;
+    color:#333;
+    font-size: 18px;
+    font-weight:600;
+  }
+
+  footer{
+    text-align:center;
+    margin: 40px 0 20px;
+    color:#666;
+    font-size: 14px;
+  }
 </style>
 </head>
+
 <body>
 
-<h2>Fuula Duraa</h2>
+<header>
+  Bilida – Barnoota Afaan Oromoo
+</header>
 
-<button class="btn" onclick="location.href='index3.html'">Learn Afán Oromó</button>
-<button class="btn" onclick="location.href='index1.html'">Convert Numbers</button>
-<button class="btn" onclick="location.href='index2.html'">Split Syllables</button>
+<div class="container">
+
+  <div class="title">Filannoo Barnootaa</div>
+
+  <div class="cards">
+
+    <div class="card">
+      <a href="learning.html">📘 Barnoota Afaan Oromoo</a>
+    </div>
+
+    <div class="card">
+      <a href="numbers.html">🔢 Lakkoofsa Gara Jechootaatti</a>
+    </div>
+
+    <div class="card">
+      <a href="syllables.html">✂️ Split Syllables</a>
+    </div>
+
+    <div class="card">
+      <a href="calendar.html">📅 Time & Date</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  © 2025 Bilida – Afaan Oromoo
+</footer>
 
 </body>
 </html>
