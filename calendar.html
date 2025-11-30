@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="om">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Oromo Calendar — Extended</title>
+
+<style>
+  body{
+    font-family:system-ui,Roboto;
+    padding:20px;
+    background:#fafafa;
+  }
+  
+  .cal, .cal2{
+    max-width:260px;
+    margin:auto;
+    padding:20px;
+    background:white;
+    border-radius:16px;
+    box-shadow:0 0 10px #0001;
+    text-align:center;
+  }
+
+  .weekday{font-size:20px;margin-top:8px;color:#444;}
+  .day{font-size:48px;font-weight:600;}
+  .month{font-size:26px;margin-top:-6px;}
+  .year{font-size:20px;margin-top:4px;}
+
+  .card{
+    max-width:260px;margin:20px auto 0 auto;padding:18px;
+    background:white;border-radius:16px;box-shadow:0 0 10px #0001;
+  }
+  .card h3{text-align:center;margin:0 0 10px 0;font-size:18px;}
+  .row{
+    display:flex;justify-content:space-between;
+    padding:6px 0;border-bottom:1px solid #eee;font-size:16px;
+  }
+  .row:last-child{border-bottom:none;}
+</style>
+</head>
+<body>
+
+<!-- ETHIOPIAN CALENDAR -->
+<div class="cal">
+  <div class="weekday" id="w"></div>
+  <div class="day" id="d"></div>
+  <div class="month" id="m"></div>
+  <div class="year" id="y"></div>
+</div>
+
+<!-- GREGORIAN CALENDAR -->
+<div class="cal2" style="margin-top:20px;">
+  <div class="weekday" id="gw"></div>
+  <div class="day" id="gd"></div>
+  <div class="month" id="gm"></div>
+  <div class="year" id="gy"></div>
+</div>
+
+<!-- WEEKDAYS LIST -->
+<div class="card">
+  <h3>Weekdays: Oromo & English</h3>
+
+  <div class="row"><span>Dilbata</span><span>Sunday</span></div>
+  <div class="row"><span>Wiixata</span><span>Monday</span></div>
+  <div class="row"><span>Kibxata</span><span>Tuesday</span></div>
+  <div class="row"><span>Roobii</span><span>Wednesday</span></div>
+  <div class="row"><span>Kamisa</span><span>Thursday</span></div>
+  <div class="row"><span>Jimaata</span><span>Friday</span></div>
+  <div class="row"><span>Sanbata</span><span>Saturday</span></div>
+</div>
+
+<!-- NEW MONTH LIST CARD -->
+<div class="card">
+  <h3>Months: Oromo & English</h3>
+
+  <div class="row"><span>Fulbaana</span><span>September</span></div>
+  <div class="row"><span>Onkololeessa</span><span>October</span></div>
+  <div class="row"><span>Sadaasa</span><span>November</span></div>
+  <div class="row"><span>Muddee</span><span>December</span></div>
+  <div class="row"><span>Amajjii</span><span>January</span></div>
+  <div class="row"><span>Guraandhalaa</span><span>February</span></div>
+  <div class="row"><span>Bitooteessa</span><span>March</span></div>
+  <div class="row"><span>Elba</span><span>April</span></div>
+  <div class="row"><span>Caamsa</span><span>May</span></div>
+  <div class="row"><span>Waxabajjii</span><span>June</span></div>
+  <div class="row"><span>Adoolessa</span><span>July</span></div>
+  <div class="row"><span>Hagayya</span><span>August</span></div>
+</div>
+
+<script>
+function getLocalDateOnly() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
+function gregorianToJDN(y, m, d) {
+  const a = Math.floor((14 - m) / 12);
+  const y2 = y + 4800 - a;
+  const m2 = m + 12 * a - 3;
+
+  return d + Math.floor((153 * m2 + 2) / 5) +
+    365 * y2 + Math.floor(y2 / 4) -
+    Math.floor(y2 / 100) + Math.floor(y2 / 400) - 32045;
+}
+
+function jdnToEthiopic(jdn) {
+  const epoch = 1724221;
+
+  const r = (jdn - epoch) % 1461;
+  const rpos = (r + 1461) % 1461;
+
+  const n = (rpos % 365) + 365 * Math.floor(rpos / 1460);
+  const year = 4 * Math.floor((jdn - epoch) / 1461) +
+               Math.floor(rpos / 365) -
+               Math.floor(rpos / 1460) + 1;
+
+  const month = Math.floor(n / 30) + 1;
+  const day = (n % 30) + 1;
+
+  return { year, month, day };
+}
+
+const omMonths = [
+  "", "Fulbaana","Onkololeessa","Sadaasa",
+  "Muddee","Amajjii","Guraandhalaa",
+  "Bitooteessa","Elba","Caamsa",
+  "Waxabajjii","Adoolessa","Hagayya"
+];
+
+function getOromoWeekday(dateObj) {
+  const oromoDays = [
+    "Dilbata","Wiixata","Kibxata",
+    "Roobii","Kamisa","Jimaata","Sanbata"
+  ];
+  return oromoDays[dateObj.getDay()];
+}
+
+const enWeekdays = [
+  "Sunday","Monday","Tuesday","Wednesday",
+  "Thursday","Friday","Saturday"
+];
+
+const g = getLocalDateOnly();
+const jdn = gregorianToJDN(g.getFullYear(), g.getMonth()+1, g.getDate());
+const et = jdnToEthiopic(jdn);
+
+document.getElementById("w").textContent = getOromoWeekday(g);
+document.getElementById("d").textContent = et.day;
+document.getElementById("m").textContent = omMonths[et.month];
+document.getElementById("y").textContent = et.year + " EC";
+
+document.getElementById("gw").textContent = enWeekdays[g.getDay()];
+document.getElementById("gd").textContent = g.getDate();
+
+const enMonths = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+document.getElementById("gm").textContent = enMonths[g.getMonth()];
+document.getElementById("gy").textContent = g.getFullYear();
+</script>
+
+</body>
+</html>
