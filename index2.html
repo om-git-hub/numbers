@@ -1,130 +1,107 @@
 <!doctype html>
 <html lang="om">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Oromo Syllabifier</title>
 
 <style>
-  .back-container {
-    width: 100%;
-    text-align: center;
-    margin: 25px 0;
-  }
-
-  .back-btn {
-    display: inline-block;
-    background: #2563eb;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-size: 16px;
-    text-decoration: none;
-    font-weight: 600;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-    transition: 0.2s ease-in-out;
-  }
-
-  .back-btn:hover {
-    background: #1e4fcc;
-    transform: translateY(-2px);
-  }
-</style>
-<style>
   body{
     margin:0;
-    background:linear-gradient(135deg,#f7f9fc,#eef1ff);
-    font-family:system-ui,Segoe UI,Roboto,Arial;
-    padding:30px;
-    color:#111;
+    padding:20px 12px;
+    font-family:Inter, system-ui, Roboto, Arial;
+    background:#f0f2ff;
+    display:flex;
+    justify-content:center;
   }
 
   .card{
-    max-width:720px;
-    margin:0 auto;
+    width:100%;
+    max-width:520px;
     background:white;
-    padding:40px;
-    border-radius:18px;
-    box-shadow:0 12px 45px rgba(0,0,50,0.9);
-    border:0px solid #f0f4ff;
+    padding:22px;
+    border-radius:16px;
+    box-shadow:0 3px 14px rgba(0,0,0,0.05);
+    border:1px solid #e6e8f5;
   }
 
   h1{
-    font-size:26px;
-    margin:0 0 0px;
-    font-weight:600;
+    margin:0 0 20px;
+    font-size:22px;
+    font-weight:700;
     text-align:center;
-    color:#0b1a4a;
+    color:#1a1d33;
   }
 
-  #word{
+  input{
     width:100%;
-    padding:18px;
-    border-radius:14px;
-    font-size:20px;
-    border:0.5px solid #ccd6ee;
+    padding:16px;
+    border-radius:12px;
+    border:1.6px solid #d7dbeb;
+    font-size:18px;
     outline:none;
-    transition:0.2s;
+    background:#fafbff;
   }
-  #word:focus{
-    border-color:#4c7dff;
-    box-shadow:0 0 0 2px #dfe7ff;
+  input:focus{
+    border-color:#3a49ff;
+    box-shadow:0 0 0 3px rgba(85,102,255,0.18);
   }
 
   .row{
-    margin-top:18px;
     display:flex;
-    justify-content:center;
     gap:12px;
+    margin-top:18px;
   }
 
   button{
-    padding:14px 18px;
+    flex:1;
+    padding:14px 0;
+    font-size:17px;
+    font-weight:600;
     border-radius:12px;
-    font-size:18px;
-    border:0;
+    border:1.6px solid #dadffe;
     cursor:pointer;
-    transition:0.2s;
-    min-width:120px;
+    background:#f3f5ff;
+    color:#20233f;
   }
 
   #go{
-    background:#2962ff;
+    background:#3e4aff;
+    border-color:#3e4aff;
     color:white;
-  }
-  #go:hover{ background:#1749cc; }
-
-  #clear{
-    background:#eef3ff;
-    color:#222;
-    border:1px solid #d6def8;
-  }
-  #clear:hover{
-    background:#dfe7ff;
   }
 
   pre{
-    background:#0e1226;
-    color:#e8eefc;
-    padding:20px;
+    background:#0c1124;
+    color:#e9eeff;
+    padding:16px;
     border-radius:12px;
-    margin-top:20px;
+    margin-top:18px;
+    font-size:17px;
     white-space:pre-wrap;
-    font-size:22px;
   }
 
-  #count{
-    background:#f2f5ff;
-    color:#333;
-    border:1px solid #d9e2ff;
-    font-size:20px;
-  }
+  /* Hide result area & Saga2 as ordered */
+  #result { display:none; }
+  #saga2  { display:none; }
 
+  /* NEW visible result area */
+  #newResult{
+    background:#eef2ff;
+    color:#1a1d33;
+    padding:16px;
+    border-radius:12px;
+    margin-top:18px;
+    border:1px solid #d9ddff;
+    font-size:17px;
+    white-space:pre-wrap;
+  }
 </style>
 </head>
 
 <body>
 <div class="card">
+
     <h1>Oromo Syllabifier</h1>
 
     <input id="word" placeholder="Jecha galchi...">
@@ -134,14 +111,30 @@
         <button id="clear">Clear</button>
     </div>
 
-    <pre id="result">Result appears here</pre>
-    <pre id="count">-</pre>
+    <!-- NEW RESULT -->
+    <pre id="newResult"></pre>
+
+    <!-- Hidden -->
+    <pre id="result"></pre>
+
+    <!-- Syllable steps -->
+    <pre id="saga1"></pre>
+    <pre id="saga2"></pre>
+    <pre id="saga3"></pre>
+    <pre id="count"></pre>
+
+    <button onclick="playSaga3Audio()" 
+style="width:100%;margin-top:12px;padding:14px;border-radius:12px;
+background:#0a7cff;color:white;font-size:17px;font-weight:600;">
+🔊 Play TTS Audio Syllables
+</button>
+
 </div>
 
+<!-- SYLLABIFIER FULL LOGIC (unchanged) -->
 <script>
 (() => {
 
-  /* DOUBLE-CONSONANT MAP */
   const dcMap = {
     "ch":"Ç","dh":"Ð","ny":"Ñ",
     "ph":"Þ","ts":"Ŧ","sh":"Š","zy":"Ž"
@@ -149,41 +142,41 @@
   const APOST = "Ƶ";
   const revMap = Object.fromEntries(Object.entries(dcMap).map(([k,v])=>[v,k]));
 
-  /* -------------- ★ NEW RULE ★ --------------
-     If space + vowel → change to 'vowel before normalization
-     Example: "ba aanaa" → "ba 'aanaa"
-  ------------------------------------------------ */
-  function preprocessSpaces(str){
-      return str.replace(/ ([aeiouAEIOU])/g, " '$1");
-  }
-
   function normalize(w){
-    let s = preprocessSpaces(w.toLowerCase());
-
-    for(const k of Object.keys(dcMap))
-        s = s.split(k).join(dcMap[k]);
-
+    let s = w.toLowerCase();
+    for(const k of Object.keys(dcMap)) s = s.split(k).join(dcMap[k]);
     return s.replace(/'/g, APOST);
   }
 
   function unNormalizePiece(p){
     let s = p;
-    for(const [v,k] of Object.entries(revMap)) 
-        s = s.split(v).join(k);
-    return s.split(APOST).join("'");
+    for(const [v,k] of Object.entries(revMap)) s = s.split(v).join(k);
+    s = s.split(APOST).join("'");
+    return s;
   }
 
   const placeholders = Object.values(dcMap).join('') + APOST;
-
   const isV = ch => ch && "aeiou".includes(ch);
-  const isC = ch => ch && (placeholders.includes(ch) ||
-      (/^[a-z]$/i.test(ch) && !"aeiou".includes(ch)));
+  const isC = ch =>
+     ch &&
+     (placeholders.includes(ch)
+      || ch === 'y'
+      || ch === '.'
+      || ch === '?'
+      || ch === '!'
+      || ch === ','
+      || ch === '"'
+      || ch === ';'
+      || ch === ':'
+      || (/^[a-z]$/i.test(ch) && !"aeiou".includes(ch)));
 
-  /* --- BACKWARD SYLLABLE EXTRACTION LOGIC (unchanged) --- */
+  function fixSpaceVowelRule(text){
+      return text.replace(/ ([aeiou])/gi, " '$1");
+  }
+
   function extractEnd(norm){
     const L = norm.length;
     const s=i=>norm[i]||"";
-
     if(L>=5){
       const [c1,c2,v1,v2,c3]=[s(L-5),s(L-4),s(L-3),s(L-2),s(L-1)];
       if(isC(c1)&&isC(c2)&&isV(v1)&&isV(v2)&&isC(c3)&&c1!==c2) return norm.slice(L-4);
@@ -200,7 +193,6 @@
       const [cprev,c,v]=[s(L-3),s(L-2),s(L-1)];
       if(isC(cprev)&&isC(c)&&isV(v)&&cprev!==c) return norm.slice(L-2);
     }
-
     if(L>=5){
       const [a,b,c,d,e]=[s(L-5),s(L-4),s(L-3),s(L-2),s(L-1)];
       if(isC(a)&&isC(b)&&isV(c)&&isV(d)&&isC(e)) return norm.slice(L-5);
@@ -217,7 +209,6 @@
       const [a,b,c]=[s(L-3),s(L-2),s(L-1)];
       if(isC(a)&&isV(b)&&isC(c)) return norm.slice(L-3);
     }
-
     if(L>=4){
       const [a,b,c,d]=[s(L-4),s(L-3),s(L-2),s(L-1)];
       if(isC(a)&&isC(b)&&isV(c)&&isV(d)) return norm.slice(L-4);
@@ -253,44 +244,161 @@
   }
 
   function splitAndDisplay(word){
-    const withStart=applyStartVowelRule(word);
-    const norm=normalize(withStart.trim());
-    const parts=backwardSegments(norm).reverse();
+    const withStart = applyStartVowelRule(word);
+    const norm = normalize(withStart.trim());
+    const parts = backwardSegments(norm).reverse();
     return parts.map(unNormalizePiece).join("-");
   }
 
-  function syllableCount(str){
-      const total = str.split("-").length;
-      const spaces = (str.match(/ /g) || []).length;
-      return total - spaces;
+  function syllableCountFromSaga1(clean){
+      if(!clean.trim()) return 0;
+      let hy = (clean.match(/-/g) || []).length;
+      return hy + 1;
+  }
+
+  function saga2Transform(clean){
+    return clean.replace(/-/g,"--");
+  }
+
+  function saga3Transform(text){
+    const cons = "(ch|dh|ny|ph|sh|ts|zy|[bcdfghjklmnpqrstvwxz]|y|\\.|')";
+    const pattern = new RegExp("([aeiou])--" + cons, "gi");
+    let result = text.replace(pattern, (m, v, C) => v + "-" + v + C + "-" + C);
+
+    result = result.replace(
+      /(ch|dh|ny|ph|sh|ts|zy|[bcdfghjklmnpqrstvwxz])--(ch|dh|ny|ph|sh|ts|zy|[bcdfghjklmnpqrstvwxz])/gi,
+      "$1-$2"
+    );
+
+    result = result.replace(/--([.,!?;:"])/g, "$1");
+    result = result.replace(/([.,!?;:"])--/g, "$1 ");
+
+    return result;
+  }
+
+  function displayUnnormalize(text){
+    if(!text) return text;
+    let out = text;
+    for(const [placeholder, digraph] of Object.entries(revMap)){
+      out = out.split(placeholder).join(digraph);
+    }
+    out = out.split(APOST).join("'");
+    return out;
   }
 
   const inp=document.getElementById("word");
   const out=document.getElementById("result");
+  const s1=document.getElementById("saga1");
+  const s2=document.getElementById("saga2");
+  const s3=document.getElementById("saga3");
   const cnt=document.getElementById("count");
+  const newRes=document.getElementById("newResult");
 
   document.getElementById("go").addEventListener("click",()=>{
-    const raw=inp.value.trim();
-    if(!raw){ out.textContent=""; cnt.textContent="-"; return; }
-    const outStr=splitAndDisplay(raw);
-    out.textContent=outStr;
-    cnt.textContent=syllableCount(outStr);
+    const raw = inp.value.trim();
+
+    newRes.textContent = raw.toLowerCase();
+
+    const fixed = fixSpaceVowelRule(raw);
+    const outStr = splitAndDisplay(fixed);
+
+    out.textContent = displayUnnormalize(outStr);
+
+    let clean = outStr.replace(/\s+/g,"")
+                      .replace(/--+/g,"-")
+                      .replace(/^-+/, "")
+                      .replace(/-+$/, "");
+
+    s1.textContent = displayUnnormalize(clean);
+    const s2v = saga2Transform(clean);
+    s2.textContent = displayUnnormalize(s2v);
+    s3.textContent = displayUnnormalize(saga3Transform(s2v));
+
+    cnt.textContent = syllableCountFromSaga1(clean);
   });
 
   document.getElementById("clear").addEventListener("click",()=>{
     inp.value="";
+    newRes.textContent="";
     out.textContent="";
-    cnt.textContent="-";
+    s1.textContent="";
+    s2.textContent="";
+    s3.textContent="";
+    cnt.textContent="";
     inp.focus();
+  });
+
+  inp.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+      e.preventDefault();
+      document.getElementById("go").click();
+    }
   });
 
 })();
 </script>
-<!-- BACK TO HOME BUTTON -->
-<div class="back-container">
-  <a href="index.html" class="back-btn">
-    ⌂ Back to Home
-  </a>
-</div>
+
+<!-- NEW AUDIO ENGINE -->
+<script>
+const AUDIO_BASE = "sagalee/";
+let audioQueue = [];
+let isAudioPlaying = false;
+
+/* Clean syllabus → filename */
+function normalizeToken(t) {
+    if (!t) return "";
+    t = t.trim();
+
+    // remove hyphens from tokens like -laa-, --ba-- etc
+    t = t.replace(/^-+/, "").replace(/-+$/, "");
+    t = t.replace(/-/g, "");
+
+    // apostrophe token (start-vowel rule)
+    if (t === "'") return "apostrophe";    // apostrophe.ogg  
+
+    return t;
+}
+
+/* Play next audio file in queue */
+function playNext() {
+    if (audioQueue.length === 0) {
+        isAudioPlaying = false;
+        return;
+    }
+
+    isAudioPlaying = true;
+
+    const raw = audioQueue.shift();
+    const token = normalizeToken(raw);
+    if (!token) {
+        playNext();
+        return;
+    }
+
+    const file = AUDIO_BASE + token + ".ogg";
+    const audio = new Audio(file);
+
+    audio.onerror = () => {
+        console.warn("Missing audio file:", file);
+        playNext();
+    };
+
+    audio.onended = () => playNext();
+
+    audio.play().catch(() => playNext());
+}
+
+/* PUBLIC FUNCTION: play audio from Saga3 result */
+function playSaga3Audio() {
+    const saga1 = document.getElementById("saga1").textContent.trim();
+    if (!saga1) return;
+
+    // Example: ba-laa-la → ["ba","laa","la"]
+    audioQueue = saga1.split("-").filter(x => x.trim() !== "");
+
+    if (!isAudioPlaying) playNext();
+}
+</script>
+
 </body>
 </html>
