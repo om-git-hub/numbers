@@ -40,7 +40,7 @@ function processVerb(verb){
         }
         return result;
     }
-if(root.endsWith("ch")){
+    if(root.endsWith("ch")){
         let base = root.slice(0, -2); // remove "ch"
         let past = {
             Ani:   base + "dhe",
