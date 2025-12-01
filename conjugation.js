@@ -142,6 +142,40 @@ function processVerb(verb){
         }
         return result;
     }
+    if(root.endsWith("uudh")){
+        let base = root.slice(0,-2); // remove "ch"
+        let past = {
+            Ani:   base + "dhe",
+            Ati:   base + "te",
+            Inni:  base + "dhe",
+            Isheen: base + "te",
+            Nuti:  base + "ne",
+            Isin:  base + "tan",
+            Isaan: base + "an"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("udh")){
+        let base = root.slice(0,-2); // remove "ch"
+        let past = {
+            Ani:   base + "dhe",
+            Ati:   base + "ute",
+            Inni:  base + "dhe",
+            Isheen: base + "ute",
+            Nuti:  base + "une",
+            Isin:  base + "utan",
+            Isaan: base + "dhan"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
     if(root.endsWith("yy")){
         let base = root.slice(0, ); // remove "ch"
         let past = {
