@@ -151,7 +151,7 @@ function processVerb(verb){
             Isheen: base + "te",
             Nuti:  base + "ne",
             Isin:  base + "tan",
-            Isaan: base + "an"
+            Isaan: base + "dhan"
         };
         let result = "Verb Conjugation (Simple Past Tense):\n";
         for(let s in past){
@@ -168,6 +168,108 @@ function processVerb(verb){
             Isheen: base + "ute",
             Nuti:  base + "une",
             Isin:  base + "utan",
+            Isaan: base + "dhan"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("iidh")){
+        let base = root.slice(0,-2); // remove "ch"
+        let past = {
+            Ani:   base + "dhe",
+            Ati:   base + "te",
+            Inni:  base + "dhe",
+            Isheen: base + "te",
+            Nuti:  base + "ne",
+            Isin:  base + "tan",
+            Isaan: base + "dhan"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("idh")){
+        let base = root.slice(0,-2); // remove "ch"
+        let past = {
+            Ani:   base + "dhe",
+            Ati:   base + "ite",
+            Inni:  base + "dhe",
+            Isheen: base + "ite",
+            Nuti:  base + "ine",
+            Isin:  base + "itan",
+            Isaan: base + "dhan"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("aadh")){
+        let base = root.slice(0,-2); // remove "ch"
+        let past = {
+            Ani:   base + "dhe",
+            Ati:   base + "te",
+            Inni:  base + "dhe",
+            Isheen: base + "te",
+            Nuti:  base + "ne",
+            Isin:  base + "tan",
+            Isaan: base + "dhan"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("adh")){
+        let base = root.slice(0,); // remove "ch"
+        let past = {
+            Ani:   base + "e",
+            Ati:   base + "ite",
+            Inni:  base + "e",
+            Isheen: base + "ite",
+            Nuti:  base + "ine",
+            Isin:  base + "itan",
+            Isaan: base + "an"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("eedh")){
+        let base = root.slice(0,); // remove "ch"
+        let past = {
+            Ani:   base + "e",
+            Ati:   base + "ite",
+            Inni:  base + "e",
+            Isheen: base + "ite",
+            Nuti:  base + "ine",
+            Isin:  base + "itan",
+            Isaan: base + "an"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("edh")){
+        let base = root.slice(0,-2); // remove "ch"
+        let past = {
+            Ani:   base + "e",
+            Ati:   base + "ete",
+            Inni:  base + "dhe",
+            Isheen: base + "ete",
+            Nuti:  base + "ene",
+            Isin:  base + "etan",
             Isaan: base + "dhan"
         };
         let result = "Verb Conjugation (Simple Past Tense):\n";
