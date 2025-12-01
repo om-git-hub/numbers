@@ -7,15 +7,15 @@ function processVerb(verb){
     let root = verb;
     let nutiForm, atiForm, isheeForm, isinForm;
     if(root.endsWith("ooch")){
-        let base = root.slice(0, -2); // remove "ch"
+        let base = root.slice(0,); // remove "ch"
         let past = {
-            Ani:   base + "de",
-            Ati:   base + "dde",
-            Inni:  base + "de",
-            Isheen: base + "dde",
-            Nuti:  base + "nne",
-            Isin:  base + "ddan",
-            Isaan: base + "dan"
+            Ani:   base + "e",
+            Ati:   base + "ite",
+            Inni:  base + "e",
+            Isheen: base + "ite",
+            Nuti:  base + "ine",
+            Isin:  base + "itan",
+            Isaan: base + "an"
         };
         let result = "Verb Conjugation (Simple Past Tense):\n";
         for(let s in past){
@@ -84,6 +84,23 @@ function processVerb(verb){
             Nuti:  base + "nne",
             Isin:  base + "ttan",
             Isaan: base + "dhan"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
+    if(root.endsWith("uch")){
+        let base = root.slice(0,); // remove "ch"
+        let past = {
+            Ani:   base + "e",
+            Ati:   base + "ite",
+            Inni:  base + "e",
+            Isheen: base + "ite",
+            Nuti:  base + "ine",
+            Isin:  base + "itan",
+            Isaan: base + "an"
         };
         let result = "Verb Conjugation (Simple Past Tense):\n";
         for(let s in past){
