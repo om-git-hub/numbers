@@ -91,6 +91,23 @@ function processVerb(verb){
         }
         return result;
     }
+    if(root.endsWith("kuch")){
+        let base = root.slice(0,-2); // remove "ch"
+        let past = {
+            Ani:   base + "te",
+            Ati:   base + "tte",
+            Inni:  base + "te",
+            Isheen: base + "tte",
+            Nuti:  base + "nne",
+            Isin:  base + "ttan",
+            Isaan: base + "tan"
+        };
+        let result = "Verb Conjugation (Simple Past Tense):\n";
+        for(let s in past){
+            result += s + ": " + past[s] + "\n";
+        }
+        return result;
+    }
     if(root.endsWith("uch")){
         let base = root.slice(0,); // remove "ch"
         let past = {
