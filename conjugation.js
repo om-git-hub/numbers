@@ -264,7 +264,7 @@ function processVerb(verb){
     if(root.endsWith("edh")){
         let base = root.slice(0,-2); // remove "ch"
         let past = {
-            Ani:   base + "e",
+            Ani:   base + "dhe",
             Ati:   base + "ete",
             Inni:  base + "dhe",
             Isheen: base + "ete",
