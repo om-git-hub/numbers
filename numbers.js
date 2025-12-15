@@ -1,0 +1,384 @@
+const ones=["zeeroo","tokko","lama","sadii","afur","shan","jaha","torba","saddeet","sagal"];
+const oneSuffix=["zeeroo","tokkoo","lamaa","sadii","afurii","shanii","jahaa","torbaa","saddeetii","sagalii"];
+const tensBase=["kudhan","digdama","soddoma","afurtama","shantama","jahaatama","torbaatama","saddeettama","sagaltama"];
+const tensBaseSuffix=["kudhanii","digdamaa","soddomaa","afurtamaa","shantamaa","jahaatamaa","torbaatamaa","saddeettamaa","sagaltamaa"];
+const tensWithSuffix=["kudha","digdamii","soddomii","afurtamii","shantamii","jahaatamii","torbaatamii","saddeettamii","sagaltamii"];
+const hundreds=["dhibba"];
+const thousand=["kuma"];
+const million=["miiliyoona"];
+const billion=["biiliyoona"];
+const tiriliyoona=["tiriliyoona"];
+
+// ======================================================
+//                   1–99
+// ======================================================
+function under100(n){
+    if(n>=0 && n<=9) return ones[n];
+    if(n>=10 && n<=90 && n%10===0) return tensBase[n/10 - 1];
+    if(n>=11 && n<=99){
+        let t=Math.floor(n/10);
+        let o=n%10;
+        return tensWithSuffix[t-1] + " " + ones[o];
+    }
+    return "";
+}
+
+// ======================================================
+//                   1–999
+// ======================================================
+function under1000(n){
+    if(n<=99) return under100(n);
+
+    if(n>=100 && n<=900 && n%100===0){
+        let h=n/100;
+        return hundreds[0] + " " + ones[h];
+    }
+
+    if(n>=101 && n<=999){
+        let h=Math.floor(n/100);
+        let r=n%100;
+        let out = hundreds[0] + " " + oneSuffix[h];
+        if(r>0) out += " fi " + under100(r);
+        return out;
+    }
+
+    return "";
+}
+
+// ======================================================
+//                   MAIN INTEGER FUNCTION
+// ======================================================
+function toOromo(n){
+  if(!Number.isInteger(n) || n < 0) return "";
+
+  if(n===0) return "zeeroo";
+  if(n<=99) return under100(n);
+
+  if(n>=100 && n<=900 && n%100===0) return hundreds[0] + " " + ones[n/100];
+  if(n<=999) return under1000(n);
+
+  if(n>=1000 && n<=9000 && n%1000===0) return thousand[0] + " " + ones[n/1000];
+
+  if(n<=9999){
+      let th=Math.floor(n/1000);
+      let rem=n%1000;
+      let out=thousand[0] + " " + oneSuffix[th];
+      if(rem>0) out+=" fi " + under1000(rem);
+      return out;
+  }
+
+  if(n>=10000 && n<=90000 && n%10000===0){
+      let t=(n/1000)/10;
+      return thousand[0] + " " + tensBase[t-1];
+  }
+
+  if(n>=10001 && n<=90999 && Math.floor(n/1000)%10===0){
+      let thousands=Math.floor(n/1000);
+      let tensIndex=(thousands/10)-1;
+      let rem=n%1000;
+      let out=thousand[0] + " " + tensBaseSuffix[tensIndex];
+      if(rem>0) out+=" fi " + under1000(rem);
+      return out;
+  }
+
+  if(n>=11000 && n<=99000 && n%1000===0){
+      let thousands=Math.floor(n/1000);
+      let t=Math.floor(thousands/10);
+      let o=thousands%10;
+      return thousand[0] + " " + tensWithSuffix[t-1] + " " + ones[o];
+  }
+
+  if(n>=11001 && n<=99999){
+      let thousands=Math.floor(n/1000);
+      let t=Math.floor(thousands/10);
+      let o=thousands%10;
+      let rem=n%1000;
+      let out=thousand[0] + " " + tensWithSuffix[t-1];
+      if(o>0) out+=" " + oneSuffix[o];
+      if(rem>0) out+=" fi " + under1000(rem);
+      return out;
+  }
+
+  if(n>=100000 && n<=900000 && n%100000===0){
+      let h=n/100000;
+      return thousand[0] + " " + hundreds[0] + " " + ones[h];
+  }
+
+  if(n>=100001 && n<=999999){
+      let h=Math.floor(n/100000);
+      let rem=n%100000;
+      let out=thousand[0] + " " + hundreds[0] + " " + oneSuffix[h];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  if(n>=1000000 && n<=9000000 && n%1000000===0){
+      let m=n/1000000;
+      return million[0] + " " + ones[m];
+  }
+
+  if(n>=1000001 && n<=9999999){
+      let m=Math.floor(n/1000000);
+      let rem=n%1000000;
+      let out=million[0] + " " + oneSuffix[m];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  if(n>=10000000 && n<=90000000 && n%10000000===0){
+      let t=n/10000000;
+      return million[0] + " " + tensBase[t-1];
+  }
+
+  if(n>=10000001 && n<=90999999 && Math.floor(n/1000000)%10===0){
+      let millions=Math.floor(n/1000000);
+      let tensIndex=(millions/10)-1;
+      let rem=n%1000000;
+      let out=million[0] + " " + tensBaseSuffix[tensIndex];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  if(n>=11000000 && n<=99000000 && n%1000000===0){
+      let m=Math.floor(n/1000000);
+      let t=Math.floor(m/10);
+      let o=m%10;
+      return million[0] + " " + tensWithSuffix[t-1] + " " + ones[o];
+  }
+
+  if(n>=11000001 && n<=99999999){
+      let millions=Math.floor(n/1000000);
+      let t=Math.floor(millions/10);
+      let o=millions%10;
+      let rem=n%1000000;
+      let out=million[0] + " " + tensWithSuffix[t-1] + " " + oneSuffix[o];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  if(n>=100000000 && n<=900000000 && n%100000000===0){
+      let h=n/100000000;
+      return million[0] + " " + hundreds[0] + " " + ones[h];
+  }
+
+  if(n>=100000001 && n<=999999999){
+      let h=Math.floor(n/100000000);
+      let rem=n%100000000;
+      let out=million[0] + " " + hundreds[0] + " " + oneSuffix[h];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  // -------------- BIILIYOONA -------------------
+
+  if(n>=1000000000 && n<=9000000000 && n%1000000000===0){
+      let b=n/1000000000;
+      return billion[0] + " " + ones[b];
+  }
+
+  if(n>=1000000001 && n<=9999999999){
+      let b=Math.floor(n/1000000000);
+      let rem=n%1000000000;
+      let out=billion[0] + " " + oneSuffix[b];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  if(n>=10000000000 && n<=90000000000 && n%10000000000===0){
+      let t=n/10000000000;
+      return billion[0] + " " + tensBase[t-1];
+  }
+
+  if(n>=10000000001 && n<=90999999999 && Math.floor(n/1000000000)%10===0){
+      let b=Math.floor(n/1000000000);
+      let tensIndex=(b/10)-1;
+      let rem=n%1000000000;
+      let out=billion[0] + " " + tensBaseSuffix[tensIndex];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  if(n>=11000000001 && n<=99999999999){
+      let b=Math.floor(n/1000000000);
+      let t=Math.floor(b/10);
+      let o=b%10;
+      let rem=n%1000000000;
+      let out=billion[0] + " " + tensWithSuffix[t-1] + " " + oneSuffix[o];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+
+  if(n>=100000000000 && n<=900000000000 && n%100000000===0){
+      let h=n/100000000000;
+      return billion[0] + " " + hundreds[0] + " " + ones[h];
+  }
+
+  if(n>=100000000001 && n<=999999999999){
+      let h=Math.floor(n/100000000000);
+      let rem=n%100000000000;
+      let out=billion[0] + " " + hundreds[0] + " " + oneSuffix[h];
+      if(rem>0) out+=" fi " + toOromo(rem);
+      return out;
+  }
+// -------------- TIRILIYOONA -------------------
+if(n>=1000000000000 && n<=9000000000000 && n%1000000000000===0){
+    let t=n/1000000000000;
+    return "tiriliyoona" + " " + ones[t];
+}
+
+if(n>=1000000000001 && n<=9999999999999){
+    let t=Math.floor(n/1000000000000);
+    let rem=n%1000000000000;
+    let out="tiriliyoona" + " " + oneSuffix[t];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
+
+if(n>=10000000000000 && n<=90000000000000 && n%10000000000000===0){
+    let tens=n/10000000000000;
+    return "tiriliyoona" + " " + tensBase[tens-1];
+}
+
+if(n>=10000000000001 && n<=90999999999999 && Math.floor(n/1000000000000)%10===0){
+    let t=Math.floor(n/1000000000000);
+    let tensIndex=(t/10)-1;
+    let rem=n%1000000000000;
+    let out="tiriliyoona" + " " + tensBaseSuffix[tensIndex];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
+
+if(n>=11000000000001 && n<=99999999999999){
+    let t=Math.floor(n/1000000000000);
+    let ten=Math.floor(t/10);
+    let one=t%10;
+    let rem=n%1000000000000;
+    let out="tiriliyoona" + " " + tensWithSuffix[ten-1] + " " + oneSuffix[one];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
+
+if(n>=100000000000000 && n<=900000000000000 && n%100000000000000===0){
+    let h=n/100000000000000;
+    return "tiriliyoona" + " " + hundreds[0] + " " + ones[h];
+}
+
+if(n>=100000000000001 && n<=999999999999999){
+    let h=Math.floor(n/100000000000000);
+    let rem=n%100000000000000;
+    let out="tiriliyoona" + " " + hundreds[0] + " " + oneSuffix[h];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
+
+  return "";
+}
+
+// ======================================================
+//                  NEGATIVE NUMBERS
+// ======================================================
+function toOromoWithSign(n){
+    if(n < 0) return "negatiiva " + toOromo(Math.abs(n));
+    return toOromo(n);
+}
+
+function toOromoDecimalWithSign(x){
+    if(x < 0) return "negatiiva " + toOromoDecimal(Math.abs(x));
+    return toOromoDecimal(x);
+}
+
+// ======================================================
+//                   DECIMAL HANDLING
+// ======================================================
+function toOromoDecimal(x){
+    if(Number.isInteger(x)) return toOromo(x);
+
+    let parts = x.toString().split(".");
+    let intPart = parseInt(parts[0]);
+    let decPart = parts[1];
+
+    let digits = decPart.split("").map(d => ones[Number(d)]).join(" ");
+
+    let intWord = toOromo(intPart);
+
+    return intWord + " tuqaa " + digits;
+}
+
+// ======================================================
+//                   CONVERT BUTTON
+// ======================================================
+function convert(){
+    let val = document.getElementById("num").value;
+    if(val === "" || val === null){
+        document.getElementById("out").textContent = "";
+        return;
+    }
+
+    let num = Number(val);
+
+    if(!Number.isInteger(num)){
+        document.getElementById("out").textContent = toOromoDecimalWithSign(num);
+        return;
+    }
+
+    document.getElementById("out").textContent = toOromoWithSign(num);
+}
+
+// ======================================================
+//                   AUDIO SUPPORT
+// ======================================================
+const SOUNDS_FOLDER = "sounds/";
+
+function wordsToAudioList(text){
+    if(!text) return [];
+    return text.trim().split(/\s+/).map(w => SOUNDS_FOLDER + w + ".mp3");
+}
+
+async function mergeAndPlay(files){
+    if(!files || files.length === 0) return;
+
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const buffers = [];
+
+    for(let f of files){
+        try{
+            const resp = await fetch(f);
+            if(!resp.ok) continue;
+            const arr = await resp.arrayBuffer();
+            const buf = await ctx.decodeAudioData(arr);
+            buffers.push(buf);
+        } catch(e){
+            console.warn("Could not load", f, e);
+            continue;
+        }
+    }
+
+    if(buffers.length === 0) return;
+
+    let totalLen = buffers.reduce((sum, b) => sum + b.length, 0);
+    let output = ctx.createBuffer(1, totalLen, ctx.sampleRate);
+
+    let offset = 0;
+    for(let b of buffers){
+        output.getChannelData(0).set(b.getChannelData(0), offset);
+        offset += b.length;
+    }
+
+    const src = ctx.createBufferSource();
+    src.buffer = output;
+    src.connect(ctx.destination);
+    src.playbackRate.value = 1.5;
+    src.start(0);
+}
+
+function speakText(text){
+    const list = wordsToAudioList(text);
+    mergeAndPlay(list);
+}
+
+document.getElementById("convertBtn").addEventListener("click", convert);
+
+document.getElementById("audioBtn").addEventListener("click", function(){
+    const text = document.getElementById("out").textContent.trim();
+    if(text) speakText(text);
+});
