@@ -436,7 +436,7 @@ const SOUNDS_FOLDER = "sounds/";
 
 function wordsToAudioList(text){
     if(!text) return [];
-    return text.trim().split(/\s+/).map(w => SOUNDS_FOLDER + w + ".ogg");
+    return text.trim().split(/\s+/).map(w => SOUNDS_FOLDER + w + ".mp3");
 }
 
 async function mergeAndPlay(files){
