@@ -6,125 +6,99 @@
 <title>Afaan Oromo Number Converter</title>
 
 <style> 
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f1f5f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
 
-  body {
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f1f5f9;
-        margin: 0;
-        padding: 0;
+.container {
+    background: white;
+    width: 95%;
+    max-width: 480px;
+    margin-top: 40px;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    text-align: center;
+}
 
-        /* Remove full-centering which was blocking layout */
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
+h2 {
+    color: #1e293b;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
 
-        min-height: 100vh;
-    }
-
-  .container {
-        background: white;
-        width: 95%;
-        max-width: 480px;
-        margin-top: 40px;
-        padding: 25px;
-        border-radius: 18px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        text-align: center; /* this centers button inside */
-    }
-
-  /* BACK BUTTON FIXED */
-  .back-btn {
-    display: inline-block;
-    background: #2563eb;
-    color: white;
-    padding: 12px 24px;
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #cbd5e1;
     border-radius: 10px;
-    font-size: 16px;
-    text-decoration: none;
-    font-weight: 600;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-    transition: 0.2s ease-in-out;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    cursor: pointer;
+}
+
+#convertBtn {
+    background: #2563eb;
+}
+#convertBtn:hover {
+    background: #1e40af;
+}
+
+#audioBtn {
+    background: #059669;
+}
+#audioBtn:hover {
+    background: #047857;
+}
+
+#out {
     margin-top: 20px;
-  }
-
-  .back-btn:hover {
-    background: #1e4fcc;
-    transform: translateY(-2px);
-  }
-
-  h2 {
-        text-align: center;
-        color: #1e293b;
-        font-size: 1.6rem;
-        margin-bottom: 20px;
-    }
-
-  input {
-        width: 100%;
-        padding: 14px;
-        border: 1px solid #cbd5e1;
-        border-radius: 10px;
-        font-size: 1.1rem;
-        margin-bottom: 15px;
-        outline: none;
-    }
-    input:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
-    }
-
-  button {
-        width: 100%;
-        padding: 14px;
-        background: #2563eb;
-        border: none;
-        color: white;
-        border-radius: 10px;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-  button:hover {
-        background: #1e40af;
-    }
-
-  #out {
-        margin-top: 20px;
-        font-size: 1.25rem;
-        color: #0f172a;
-        line-height: 1.6;
-        text-align: center;
-        padding: 15px;
-        background: #f8fafc;
-        border-radius: 12px;
-        min-height: 40px;
-        border: 1px solid #e2e8f0;
-    }
-
+    font-size: 1.25rem;
+    color: #0f172a;
+    line-height: 1.6;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 12px;
+    min-height: 40px;
+    border: 1px solid #e2e8f0;
+}
 </style>
 </head>
 
 <body>
-
 <div class="container">
     <h2>Number → Afaan Oromo</h2>
 
     <input type="number" id="num" step="0.0001" placeholder="Lakkoofsa galchi...">
-    <button onclick="convert()">Jijjiiri + 🔊</button>
+
+    <div class="buttons">
+        <button id="convertBtn">Jijjiiri</button>
+        <button id="audioBtn">🔊 Audio</button>
+    </div>
+
     <p id="out"></p>
-
-    <!-- FIXED BUTTON INSIDE CONTAINER -->
-    <a href="index.html" class="back-btn">⌂ Back to Home</a>
 </div>
-
-<script>
-/* ------- JS unchanged (keessan hunda ni eegu) ------- */
-</script>
-
-</body>
-</html>
-
 <script>
 // ======================================================
 //                   BASE VALUES
@@ -138,7 +112,7 @@ const hundreds=["dhibba"];
 const thousand=["kuma"];
 const million=["miiliyoona"];
 const billion=["biiliyoona"];
-
+const tiriliyoona=["tiriliyoona"];
 
 // ======================================================
 //                   1–99
@@ -153,7 +127,6 @@ function under100(n){
     }
     return "";
 }
-
 
 // ======================================================
 //                   1–999
@@ -177,7 +150,6 @@ function under1000(n){
     return "";
 }
 
-
 // ======================================================
 //                   MAIN INTEGER FUNCTION
 // ======================================================
@@ -186,10 +158,6 @@ function toOromo(n){
 
   if(n===0) return "zeeroo";
   if(n<=99) return under100(n);
-
-  // all your original working logic preserved 100%
-  // -------------------------------------------------
-  // (I leave everything EXACTLY as you had it, no single rule removed)
 
   if(n>=100 && n<=900 && n%100===0) return hundreds[0] + " " + ones[n/100];
   if(n<=999) return under1000(n);
@@ -213,7 +181,6 @@ function toOromo(n){
       let thousands=Math.floor(n/1000);
       let tensIndex=(thousands/10)-1;
       let rem=n%1000;
-
       let out=thousand[0] + " " + tensBaseSuffix[tensIndex];
       if(rem>0) out+=" fi " + under1000(rem);
       return out;
@@ -231,7 +198,6 @@ function toOromo(n){
       let t=Math.floor(thousands/10);
       let o=thousands%10;
       let rem=n%1000;
-
       let out=thousand[0] + " " + tensWithSuffix[t-1];
       if(o>0) out+=" " + oneSuffix[o];
       if(rem>0) out+=" fi " + under1000(rem);
@@ -273,7 +239,6 @@ function toOromo(n){
       let millions=Math.floor(n/1000000);
       let tensIndex=(millions/10)-1;
       let rem=n%1000000;
-
       let out=million[0] + " " + tensBaseSuffix[tensIndex];
       if(rem>0) out+=" fi " + toOromo(rem);
       return out;
@@ -291,7 +256,6 @@ function toOromo(n){
       let t=Math.floor(millions/10);
       let o=millions%10;
       let rem=n%1000000;
-
       let out=million[0] + " " + tensWithSuffix[t-1] + " " + oneSuffix[o];
       if(rem>0) out+=" fi " + toOromo(rem);
       return out;
@@ -334,7 +298,6 @@ function toOromo(n){
       let b=Math.floor(n/1000000000);
       let tensIndex=(b/10)-1;
       let rem=n%1000000000;
-
       let out=billion[0] + " " + tensBaseSuffix[tensIndex];
       if(rem>0) out+=" fi " + toOromo(rem);
       return out;
@@ -345,7 +308,6 @@ function toOromo(n){
       let t=Math.floor(b/10);
       let o=b%10;
       let rem=n%1000000000;
-
       let out=billion[0] + " " + tensWithSuffix[t-1] + " " + oneSuffix[o];
       if(rem>0) out+=" fi " + toOromo(rem);
       return out;
@@ -359,15 +321,76 @@ function toOromo(n){
   if(n>=100000000001 && n<=999999999999){
       let h=Math.floor(n/100000000000);
       let rem=n%100000000000;
-
       let out=billion[0] + " " + hundreds[0] + " " + oneSuffix[h];
       if(rem>0) out+=" fi " + toOromo(rem);
       return out;
   }
+// -------------- TIRILIYOONA -------------------
+if(n>=1000000000000 && n<=9000000000000 && n%1000000000000===0){
+    let t=n/1000000000000;
+    return "tiriliyoona" + " " + ones[t];
+}
+
+if(n>=1000000000001 && n<=9999999999999){
+    let t=Math.floor(n/1000000000000);
+    let rem=n%1000000000000;
+    let out="tiriliyoona" + " " + oneSuffix[t];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
+
+if(n>=10000000000000 && n<=90000000000000 && n%10000000000000===0){
+    let tens=n/10000000000000;
+    return "tiriliyoona" + " " + tensBase[tens-1];
+}
+
+if(n>=10000000000001 && n<=90999999999999 && Math.floor(n/1000000000000)%10===0){
+    let t=Math.floor(n/1000000000000);
+    let tensIndex=(t/10)-1;
+    let rem=n%1000000000000;
+    let out="tiriliyoona" + " " + tensBaseSuffix[tensIndex];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
+
+if(n>=11000000000001 && n<=99999999999999){
+    let t=Math.floor(n/1000000000000);
+    let ten=Math.floor(t/10);
+    let one=t%10;
+    let rem=n%1000000000000;
+    let out="tiriliyoona" + " " + tensWithSuffix[ten-1] + " " + oneSuffix[one];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
+
+if(n>=100000000000000 && n<=900000000000000 && n%100000000000000===0){
+    let h=n/100000000000000;
+    return "tiriliyoona" + " " + hundreds[0] + " " + ones[h];
+}
+
+if(n>=100000000000001 && n<=999999999999999){
+    let h=Math.floor(n/100000000000000);
+    let rem=n%100000000000000;
+    let out="tiriliyoona" + " " + hundreds[0] + " " + oneSuffix[h];
+    if(rem>0) out+=" fi " + toOromo(rem);
+    return out;
+}
 
   return "";
 }
 
+// ======================================================
+//                  NEGATIVE NUMBERS
+// ======================================================
+function toOromoWithSign(n){
+    if(n < 0) return "negatiiva " + toOromo(Math.abs(n));
+    return toOromo(n);
+}
+
+function toOromoDecimalWithSign(x){
+    if(x < 0) return "negatiiva " + toOromoDecimal(Math.abs(x));
+    return toOromoDecimal(x);
+}
 
 // ======================================================
 //                   DECIMAL HANDLING
@@ -379,14 +402,12 @@ function toOromoDecimal(x){
     let intPart = parseInt(parts[0]);
     let decPart = parts[1];
 
-    // zeeroo duraa/miidhaa hin hubattu
     let digits = decPart.split("").map(d => ones[Number(d)]).join(" ");
 
     let intWord = toOromo(intPart);
 
     return intWord + " tuqaa " + digits;
 }
-
 
 // ======================================================
 //                   CONVERT BUTTON
@@ -401,23 +422,21 @@ function convert(){
     let num = Number(val);
 
     if(!Number.isInteger(num)){
-        document.getElementById("out").textContent = toOromoDecimal(num);
+        document.getElementById("out").textContent = toOromoDecimalWithSign(num);
         return;
     }
 
-    document.getElementById("out").textContent = toOromo(num);
+    document.getElementById("out").textContent = toOromoWithSign(num);
 }
-
 
 // ======================================================
 //                   AUDIO SUPPORT
 // ======================================================
 const SOUNDS_FOLDER = "sounds/";
 
-// 🔥 NEW speakText: merged audio playback
 function wordsToAudioList(text){
     if(!text) return [];
-    return text.trim().split(/\s+/).map(w => SOUNDS_FOLDER + w + ".mp3");
+    return text.trim().split(/\s+/).map(w => SOUNDS_FOLDER + w + ".ogg");
 }
 
 async function mergeAndPlay(files){
@@ -453,28 +472,21 @@ async function mergeAndPlay(files){
     const src = ctx.createBufferSource();
     src.buffer = output;
     src.connect(ctx.destination);
-    src.playbackRate.value = 1.5; // 1.0 = normal, 1.25 = 25% faster, 1.5 = 50% faster
+    src.playbackRate.value = 1.5;
     src.start(0);
 }
 
-// replace old speakText with merged audio
 function speakText(text){
     const list = wordsToAudioList(text);
     mergeAndPlay(list);
 }
 
-// hook to convert button
-document.addEventListener("DOMContentLoaded", function(){
-    const btn = document.querySelector('button[onclick="convert()"]');
-    if(!btn) return;
-    btn.addEventListener("click", function(){
-        setTimeout(function(){
-            const outEl = document.getElementById("out");
-            const text = outEl ? outEl.textContent.trim() : "";
-            if(text) speakText(text);
-        }, 60);
-    });
+document.getElementById("convertBtn").addEventListener("click", convert);
+
+document.getElementById("audioBtn").addEventListener("click", function(){
+    const text = document.getElementById("out").textContent.trim();
+    if(text) speakText(text);
 });
 </script>
 </body>
-</html> 
+</html>
