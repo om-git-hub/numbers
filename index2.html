@@ -1,492 +1,404 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="om">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Afaan Oromo Number Converter</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Oromo Syllabifier</title>
 
-<style> 
-body {
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
-    background: #f1f5f9;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-}
+<style>
+  body{
+    margin:0;
+    padding:20px 12px;
+    font-family:Inter, system-ui, Roboto, Arial;
+    background:#f0f2ff;
+    display:flex;
+    justify-content:center;
+  }
 
-.container {
-    background: white;
-    width: 95%;
-    max-width: 480px;
-    margin-top: 40px;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    text-align: center;
-}
+  .card{
+    width:100%;
+    max-width:520px;
+    background:white;
+    padding:22px;
+    border-radius:16px;
+    box-shadow:0 3px 14px rgba(0,0,0,0.05);
+    border:1px solid #e6e8f5;
+  }
 
-h2 {
-    color: #1e293b;
-    font-size: 1.6rem;
-    margin-bottom: 20px;
-}
+  h1{
+    margin:0 0 20px;
+    font-size:22px;
+    font-weight:700;
+    text-align:center;
+    color:#1a1d33;
+  }
 
-input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-}
+  input{
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    border:1.6px solid #d7dbeb;
+    font-size:18px;
+    outline:none;
+    background:#fafbff;
+  }
+  input:focus{
+    border-color:#3a49ff;
+    box-shadow:0 0 0 3px rgba(85,102,255,0.18);
+  }
 
-.buttons {
-    display: flex;
-    gap: 10px;
-}
+  .row{
+    display:flex;
+    gap:12px;
+    margin-top:18px;
+  }
 
-button {
-    flex: 1;
-    padding: 14px;
-    border: none;
-    color: white;
-    border-radius: 10px;
-    font-size: 1.05rem;
-    cursor: pointer;
-}
+  button{
+    flex:1;
+    padding:14px 0;
+    font-size:17px;
+    font-weight:600;
+    border-radius:12px;
+    border:1.6px solid #dadffe;
+    cursor:pointer;
+    background:#f3f5ff;
+    color:#20233f;
+  }
 
-#convertBtn {
-    background: #2563eb;
-}
-#convertBtn:hover {
-    background: #1e40af;
-}
+  #go{
+    background:#3e4aff;
+    border-color:#3e4aff;
+    color:white;
+  }
 
-#audioBtn {
-    background: #059669;
-}
-#audioBtn:hover {
-    background: #047857;
-}
+  pre{
+    background:#0c1124;
+    color:#e9eeff;
+    padding:16px;
+    border-radius:12px;
+    margin-top:18px;
+    font-size:17px;
+    white-space:pre-wrap;
+  }
 
-#out {
-    margin-top: 20px;
-    font-size: 1.25rem;
-    color: #0f172a;
-    line-height: 1.6;
-    padding: 15px;
-    background: #f8fafc;
-    border-radius: 12px;
-    min-height: 40px;
-    border: 1px solid #e2e8f0;
-}
+  /* Hide result area & Saga2 as ordered */
+  #result { display:none; }
+  #saga2  { display:none; }
+
+  /* NEW visible result area */
+  #newResult{
+    background:#eef2ff;
+    color:#1a1d33;
+    padding:16px;
+    border-radius:12px;
+    margin-top:18px;
+    border:1px solid #d9ddff;
+    font-size:17px;
+    white-space:pre-wrap;
+  }
 </style>
 </head>
 
 <body>
-<div class="container">
-    <h2>Number → Afaan Oromo</h2>
+<div class="card">
 
-    <input type="number" id="num" step="0.0001" placeholder="Lakkoofsa galchi...">
+    <h1>Oromo Syllabifier</h1>
 
-    <div class="buttons">
-        <button id="convertBtn">Jijjiiri</button>
-        <button id="audioBtn">🔊 Audio</button>
+    <input id="word" placeholder="Jecha galchi...">
+
+    <div class="row">
+        <button id="go">Split</button>
+        <button id="clear">Clear</button>
     </div>
 
-    <p id="out"></p>
+    <!-- NEW RESULT -->
+    <pre id="newResult"></pre>
+
+    <!-- Hidden -->
+    <pre id="result"></pre>
+
+    <!-- Syllable steps -->
+    <pre id="saga1"></pre>
+    <pre id="saga2"></pre>
+    <pre id="saga3"></pre>
+    <pre id="count"></pre>
+
+    <button onclick="playSaga3Audio()" 
+style="width:100%;margin-top:12px;padding:14px;border-radius:12px;
+background:#0a7cff;color:white;font-size:17px;font-weight:600;">
+🔊 Play TTS Audio Syllables
+</button>
+
 </div>
+
+<!-- SYLLABIFIER FULL LOGIC (unchanged) -->
 <script>
-// ======================================================
-//                   BASE VALUES
-// ======================================================
-const ones=["zeeroo","tokko","lama","sadii","afur","shan","jaha","torba","saddeet","sagal"];
-const oneSuffix=["zeeroo","tokkoo","lamaa","sadii","afurii","shanii","jahaa","torbaa","saddeetii","sagalii"];
-const tensBase=["kudhan","digdama","soddoma","afurtama","shantama","jahaatama","torbaatama","saddeettama","sagaltama"];
-const tensBaseSuffix=["kudhanii","digdamaa","soddomaa","afurtamaa","shantamaa","jahaatamaa","torbaatamaa","saddeettamaa","sagaltamaa"];
-const tensWithSuffix=["kudha","digdamii","soddomii","afurtamii","shantamii","jahaatamii","torbaatamii","saddeettamii","sagaltamii"];
-const hundreds=["dhibba"];
-const thousand=["kuma"];
-const million=["miiliyoona"];
-const billion=["biiliyoona"];
-const tiriliyoona=["tiriliyoona"];
+(() => {
 
-// ======================================================
-//                   1–99
-// ======================================================
-function under100(n){
-    if(n>=0 && n<=9) return ones[n];
-    if(n>=10 && n<=90 && n%10===0) return tensBase[n/10 - 1];
-    if(n>=11 && n<=99){
-        let t=Math.floor(n/10);
-        let o=n%10;
-        return tensWithSuffix[t-1] + " " + ones[o];
+  const dcMap = {
+    "ch":"Ç","dh":"Ð","ny":"Ñ",
+    "ph":"Þ","ts":"Ŧ","sh":"Š","zy":"Ž"
+  };
+  const APOST = "Ƶ";
+  const revMap = Object.fromEntries(Object.entries(dcMap).map(([k,v])=>[v,k]));
+
+  function normalize(w){
+    let s = w.toLowerCase();
+    for(const k of Object.keys(dcMap)) s = s.split(k).join(dcMap[k]);
+    return s.replace(/'/g, APOST);
+  }
+
+  function unNormalizePiece(p){
+    let s = p;
+    for(const [v,k] of Object.entries(revMap)) s = s.split(v).join(k);
+    s = s.split(APOST).join("'");
+    return s;
+  }
+
+  const placeholders = Object.values(dcMap).join('') + APOST;
+  const isV = ch => ch && "aeiou".includes(ch);
+  const isC = ch =>
+     ch &&
+     (placeholders.includes(ch)
+      || ch === 'y'
+      || ch === '.'
+      || ch === '?'
+      || ch === '!'
+      || ch === ','
+      || ch === '"'
+      || ch === ';'
+      || ch === ':'
+      || (/^[a-z]$/i.test(ch) && !"aeiou".includes(ch)));
+
+  function fixSpaceVowelRule(text){
+      return text.replace(/ ([aeiou])/gi, " '$1");
+  }
+
+  function extractEnd(norm){
+    const L = norm.length;
+    const s=i=>norm[i]||"";
+    if(L>=5){
+      const [c1,c2,v1,v2,c3]=[s(L-5),s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(c1)&&isC(c2)&&isV(v1)&&isV(v2)&&isC(c3)&&c1!==c2) return norm.slice(L-4);
     }
-    return "";
-}
-
-// ======================================================
-//                   1–999
-// ======================================================
-function under1000(n){
-    if(n<=99) return under100(n);
-
-    if(n>=100 && n<=900 && n%100===0){
-        let h=n/100;
-        return hundreds[0] + " " + ones[h];
+    if(L>=4){
+      const [c1,c2,v,c3]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(c1)&&isC(c2)&&isV(v)&&isC(c3)&&c1!==c2) return norm.slice(L-3);
     }
-
-    if(n>=101 && n<=999){
-        let h=Math.floor(n/100);
-        let r=n%100;
-        let out = hundreds[0] + " " + oneSuffix[h];
-        if(r>0) out += " fi " + under100(r);
-        return out;
+    if(L>=4){
+      const [c1,c2,v1,v2]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(c1)&&isC(c2)&&isV(v1)&&isV(v2)&&c1!==c2) return norm.slice(L-3);
     }
-
-    return "";
-}
-
-// ======================================================
-//                   MAIN INTEGER FUNCTION
-// ======================================================
-function toOromo(n){
-  if(!Number.isInteger(n) || n < 0) return "";
-
-  if(n===0) return "zeeroo";
-  if(n<=99) return under100(n);
-
-  if(n>=100 && n<=900 && n%100===0) return hundreds[0] + " " + ones[n/100];
-  if(n<=999) return under1000(n);
-
-  if(n>=1000 && n<=9000 && n%1000===0) return thousand[0] + " " + ones[n/1000];
-
-  if(n<=9999){
-      let th=Math.floor(n/1000);
-      let rem=n%1000;
-      let out=thousand[0] + " " + oneSuffix[th];
-      if(rem>0) out+=" fi " + under1000(rem);
-      return out;
+    if(L>=3){
+      const [cprev,c,v]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(cprev)&&isC(c)&&isV(v)&&cprev!==c) return norm.slice(L-2);
+    }
+    if(L>=5){
+      const [a,b,c,d,e]=[s(L-5),s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)&&isV(d)&&isC(e)) return norm.slice(L-5);
+    }
+    if(L>=4){
+      const [a,b,c,d]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)&&isC(d)) return norm.slice(L-4);
+    }
+    if(L>=4){
+      const [a,b,c,d]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)&&isV(c)&&isC(d)) return norm.slice(L-4);
+    }
+    if(L>=3){
+      const [a,b,c]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)&&isC(c)) return norm.slice(L-3);
+    }
+    if(L>=4){
+      const [a,b,c,d]=[s(L-4),s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)&&isV(d)) return norm.slice(L-4);
+    }
+    if(L>=3){
+      const [a,b,c]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isC(b)&&isV(c)) return norm.slice(L-3);
+    }
+    if(L>=3){
+      const [a,b,c]=[s(L-3),s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)&&isV(c)) return norm.slice(L-3);
+    }
+    if(L>=2){
+      const [a,b]=[s(L-2),s(L-1)];
+      if(isC(a)&&isV(b)) return norm.slice(L-2);
+    }
+    return norm.slice(-1);
   }
 
-  if(n>=10000 && n<=90000 && n%10000===0){
-      let t=(n/1000)/10;
-      return thousand[0] + " " + tensBase[t-1];
+  function backwardSegments(norm){
+    const pieces=[];
+    while(norm.length>0){
+      const end=extractEnd(norm);
+      pieces.push(end);
+      norm=norm.slice(0,norm.length-end.length);
+    }
+    return pieces;
   }
 
-  if(n>=10001 && n<=90999 && Math.floor(n/1000)%10===0){
-      let thousands=Math.floor(n/1000);
-      let tensIndex=(thousands/10)-1;
-      let rem=n%1000;
-      let out=thousand[0] + " " + tensBaseSuffix[tensIndex];
-      if(rem>0) out+=" fi " + under1000(rem);
-      return out;
+  function applyStartVowelRule(original){
+    if(!original) return original;
+    return "aeiou".includes(original[0].toLowerCase()) ? "'" + original : original;
   }
 
-  if(n>=11000 && n<=99000 && n%1000===0){
-      let thousands=Math.floor(n/1000);
-      let t=Math.floor(thousands/10);
-      let o=thousands%10;
-      return thousand[0] + " " + tensWithSuffix[t-1] + " " + ones[o];
+  function splitAndDisplay(word){
+    const withStart = applyStartVowelRule(word);
+    const norm = normalize(withStart.trim());
+    const parts = backwardSegments(norm).reverse();
+    return parts.map(unNormalizePiece).join("-");
   }
 
-  if(n>=11001 && n<=99999){
-      let thousands=Math.floor(n/1000);
-      let t=Math.floor(thousands/10);
-      let o=thousands%10;
-      let rem=n%1000;
-      let out=thousand[0] + " " + tensWithSuffix[t-1];
-      if(o>0) out+=" " + oneSuffix[o];
-      if(rem>0) out+=" fi " + under1000(rem);
-      return out;
+  function syllableCountFromSaga1(clean){
+      if(!clean.trim()) return 0;
+      let hy = (clean.match(/-/g) || []).length;
+      return hy + 1;
   }
 
-  if(n>=100000 && n<=900000 && n%100000===0){
-      let h=n/100000;
-      return thousand[0] + " " + hundreds[0] + " " + ones[h];
+  function saga2Transform(clean){
+    return clean.replace(/-/g,"--");
   }
 
-  if(n>=100001 && n<=999999){
-      let h=Math.floor(n/100000);
-      let rem=n%100000;
-      let out=thousand[0] + " " + hundreds[0] + " " + oneSuffix[h];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
+  function saga3Transform(text){
+    const cons = "(ch|dh|ny|ph|sh|ts|zy|[bcdfghjklmnpqrstvwxz]|y|\\.|')";
+    const pattern = new RegExp("([aeiou])--" + cons, "gi");
+    let result = text.replace(pattern, (m, v, C) => v + "-" + v + C + "-" + C);
+
+    result = result.replace(
+      /(ch|dh|ny|ph|sh|ts|zy|[bcdfghjklmnpqrstvwxz])--(ch|dh|ny|ph|sh|ts|zy|[bcdfghjklmnpqrstvwxz])/gi,
+      "$1-$2"
+    );
+
+    result = result.replace(/--([.,!?;:"])/g, "$1");
+    result = result.replace(/([.,!?;:"])--/g, "$1 ");
+
+    return result;
   }
 
-  if(n>=1000000 && n<=9000000 && n%1000000===0){
-      let m=n/1000000;
-      return million[0] + " " + ones[m];
-  }
-
-  if(n>=1000001 && n<=9999999){
-      let m=Math.floor(n/1000000);
-      let rem=n%1000000;
-      let out=million[0] + " " + oneSuffix[m];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-
-  if(n>=10000000 && n<=90000000 && n%10000000===0){
-      let t=n/10000000;
-      return million[0] + " " + tensBase[t-1];
-  }
-
-  if(n>=10000001 && n<=90999999 && Math.floor(n/1000000)%10===0){
-      let millions=Math.floor(n/1000000);
-      let tensIndex=(millions/10)-1;
-      let rem=n%1000000;
-      let out=million[0] + " " + tensBaseSuffix[tensIndex];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-
-  if(n>=11000000 && n<=99000000 && n%1000000===0){
-      let m=Math.floor(n/1000000);
-      let t=Math.floor(m/10);
-      let o=m%10;
-      return million[0] + " " + tensWithSuffix[t-1] + " " + ones[o];
-  }
-
-  if(n>=11000001 && n<=99999999){
-      let millions=Math.floor(n/1000000);
-      let t=Math.floor(millions/10);
-      let o=millions%10;
-      let rem=n%1000000;
-      let out=million[0] + " " + tensWithSuffix[t-1] + " " + oneSuffix[o];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-
-  if(n>=100000000 && n<=900000000 && n%100000000===0){
-      let h=n/100000000;
-      return million[0] + " " + hundreds[0] + " " + ones[h];
-  }
-
-  if(n>=100000001 && n<=999999999){
-      let h=Math.floor(n/100000000);
-      let rem=n%100000000;
-      let out=million[0] + " " + hundreds[0] + " " + oneSuffix[h];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-
-  // -------------- BIILIYOONA -------------------
-
-  if(n>=1000000000 && n<=9000000000 && n%1000000000===0){
-      let b=n/1000000000;
-      return billion[0] + " " + ones[b];
-  }
-
-  if(n>=1000000001 && n<=9999999999){
-      let b=Math.floor(n/1000000000);
-      let rem=n%1000000000;
-      let out=billion[0] + " " + oneSuffix[b];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-
-  if(n>=10000000000 && n<=90000000000 && n%10000000000===0){
-      let t=n/10000000000;
-      return billion[0] + " " + tensBase[t-1];
-  }
-
-  if(n>=10000000001 && n<=90999999999 && Math.floor(n/1000000000)%10===0){
-      let b=Math.floor(n/1000000000);
-      let tensIndex=(b/10)-1;
-      let rem=n%1000000000;
-      let out=billion[0] + " " + tensBaseSuffix[tensIndex];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-
-  if(n>=11000000001 && n<=99999999999){
-      let b=Math.floor(n/1000000000);
-      let t=Math.floor(b/10);
-      let o=b%10;
-      let rem=n%1000000000;
-      let out=billion[0] + " " + tensWithSuffix[t-1] + " " + oneSuffix[o];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-
-  if(n>=100000000000 && n<=900000000000 && n%100000000===0){
-      let h=n/100000000000;
-      return billion[0] + " " + hundreds[0] + " " + ones[h];
-  }
-
-  if(n>=100000000001 && n<=999999999999){
-      let h=Math.floor(n/100000000000);
-      let rem=n%100000000000;
-      let out=billion[0] + " " + hundreds[0] + " " + oneSuffix[h];
-      if(rem>0) out+=" fi " + toOromo(rem);
-      return out;
-  }
-// -------------- TIRILIYOONA -------------------
-if(n>=1000000000000 && n<=9000000000000 && n%1000000000000===0){
-    let t=n/1000000000000;
-    return "tiriliyoona" + " " + ones[t];
-}
-
-if(n>=1000000000001 && n<=9999999999999){
-    let t=Math.floor(n/1000000000000);
-    let rem=n%1000000000000;
-    let out="tiriliyoona" + " " + oneSuffix[t];
-    if(rem>0) out+=" fi " + toOromo(rem);
+  function displayUnnormalize(text){
+    if(!text) return text;
+    let out = text;
+    for(const [placeholder, digraph] of Object.entries(revMap)){
+      out = out.split(placeholder).join(digraph);
+    }
+    out = out.split(APOST).join("'");
     return out;
-}
+  }
 
-if(n>=10000000000000 && n<=90000000000000 && n%10000000000000===0){
-    let tens=n/10000000000000;
-    return "tiriliyoona" + " " + tensBase[tens-1];
-}
+  const inp=document.getElementById("word");
+  const out=document.getElementById("result");
+  const s1=document.getElementById("saga1");
+  const s2=document.getElementById("saga2");
+  const s3=document.getElementById("saga3");
+  const cnt=document.getElementById("count");
+  const newRes=document.getElementById("newResult");
 
-if(n>=10000000000001 && n<=90999999999999 && Math.floor(n/1000000000000)%10===0){
-    let t=Math.floor(n/1000000000000);
-    let tensIndex=(t/10)-1;
-    let rem=n%1000000000000;
-    let out="tiriliyoona" + " " + tensBaseSuffix[tensIndex];
-    if(rem>0) out+=" fi " + toOromo(rem);
-    return out;
-}
+  document.getElementById("go").addEventListener("click",()=>{
+    const raw = inp.value.trim();
 
-if(n>=11000000000001 && n<=99999999999999){
-    let t=Math.floor(n/1000000000000);
-    let ten=Math.floor(t/10);
-    let one=t%10;
-    let rem=n%1000000000000;
-    let out="tiriliyoona" + " " + tensWithSuffix[ten-1] + " " + oneSuffix[one];
-    if(rem>0) out+=" fi " + toOromo(rem);
-    return out;
-}
+    newRes.textContent = raw.toLowerCase();
 
-if(n>=100000000000000 && n<=900000000000000 && n%100000000000000===0){
-    let h=n/100000000000000;
-    return "tiriliyoona" + " " + hundreds[0] + " " + ones[h];
-}
+    const fixed = fixSpaceVowelRule(raw);
+    const outStr = splitAndDisplay(fixed);
 
-if(n>=100000000000001 && n<=999999999999999){
-    let h=Math.floor(n/100000000000000);
-    let rem=n%100000000000000;
-    let out="tiriliyoona" + " " + hundreds[0] + " " + oneSuffix[h];
-    if(rem>0) out+=" fi " + toOromo(rem);
-    return out;
-}
+    out.textContent = displayUnnormalize(outStr);
 
-  return "";
-}
+    let clean = outStr.replace(/\s+/g,"")
+                      .replace(/--+/g,"-")
+                      .replace(/^-+/, "")
+                      .replace(/-+$/, "");
 
-// ======================================================
-//                  NEGATIVE NUMBERS
-// ======================================================
-function toOromoWithSign(n){
-    if(n < 0) return "negatiiva " + toOromo(Math.abs(n));
-    return toOromo(n);
-}
+    s1.textContent = displayUnnormalize(clean);
+    const s2v = saga2Transform(clean);
+    s2.textContent = displayUnnormalize(s2v);
+    s3.textContent = displayUnnormalize(saga3Transform(s2v));
 
-function toOromoDecimalWithSign(x){
-    if(x < 0) return "negatiiva " + toOromoDecimal(Math.abs(x));
-    return toOromoDecimal(x);
-}
+    cnt.textContent = syllableCountFromSaga1(clean);
+  });
 
-// ======================================================
-//                   DECIMAL HANDLING
-// ======================================================
-function toOromoDecimal(x){
-    if(Number.isInteger(x)) return toOromo(x);
+  document.getElementById("clear").addEventListener("click",()=>{
+    inp.value="";
+    newRes.textContent="";
+    out.textContent="";
+    s1.textContent="";
+    s2.textContent="";
+    s3.textContent="";
+    cnt.textContent="";
+    inp.focus();
+  });
 
-    let parts = x.toString().split(".");
-    let intPart = parseInt(parts[0]);
-    let decPart = parts[1];
-
-    let digits = decPart.split("").map(d => ones[Number(d)]).join(" ");
-
-    let intWord = toOromo(intPart);
-
-    return intWord + " tuqaa " + digits;
-}
-
-// ======================================================
-//                   CONVERT BUTTON
-// ======================================================
-function convert(){
-    let val = document.getElementById("num").value;
-    if(val === "" || val === null){
-        document.getElementById("out").textContent = "";
-        return;
+  inp.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+      e.preventDefault();
+      document.getElementById("go").click();
     }
+  });
 
-    let num = Number(val);
-
-    if(!Number.isInteger(num)){
-        document.getElementById("out").textContent = toOromoDecimalWithSign(num);
-        return;
-    }
-
-    document.getElementById("out").textContent = toOromoWithSign(num);
-}
-
-// ======================================================
-//                   AUDIO SUPPORT
-// ======================================================
-const SOUNDS_FOLDER = "sounds/";
-
-function wordsToAudioList(text){
-    if(!text) return [];
-    return text.trim().split(/\s+/).map(w => SOUNDS_FOLDER + w + ".ogg");
-}
-
-async function mergeAndPlay(files){
-    if(!files || files.length === 0) return;
-
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const buffers = [];
-
-    for(let f of files){
-        try{
-            const resp = await fetch(f);
-            if(!resp.ok) continue;
-            const arr = await resp.arrayBuffer();
-            const buf = await ctx.decodeAudioData(arr);
-            buffers.push(buf);
-        } catch(e){
-            console.warn("Could not load", f, e);
-            continue;
-        }
-    }
-
-    if(buffers.length === 0) return;
-
-    let totalLen = buffers.reduce((sum, b) => sum + b.length, 0);
-    let output = ctx.createBuffer(1, totalLen, ctx.sampleRate);
-
-    let offset = 0;
-    for(let b of buffers){
-        output.getChannelData(0).set(b.getChannelData(0), offset);
-        offset += b.length;
-    }
-
-    const src = ctx.createBufferSource();
-    src.buffer = output;
-    src.connect(ctx.destination);
-    src.playbackRate.value = 1.5;
-    src.start(0);
-}
-
-function speakText(text){
-    const list = wordsToAudioList(text);
-    mergeAndPlay(list);
-}
-
-document.getElementById("convertBtn").addEventListener("click", convert);
-
-document.getElementById("audioBtn").addEventListener("click", function(){
-    const text = document.getElementById("out").textContent.trim();
-    if(text) speakText(text);
-});
+})();
 </script>
+
+<!-- NEW AUDIO ENGINE -->
+<script>
+const AUDIO_BASE = "sagalee/";
+let audioQueue = [];
+let isAudioPlaying = false;
+
+/* Clean syllabus → filename */
+function normalizeToken(t) {
+    if (!t) return "";
+    t = t.trim();
+
+    // remove hyphens from tokens like -laa-, --ba-- etc
+    t = t.replace(/^-+/, "").replace(/-+$/, "");
+    t = t.replace(/-/g, "");
+
+    // apostrophe token (start-vowel rule)
+    if (t === "'") return "apostrophe";    // apostrophe.ogg  
+
+    return t;
+}
+
+/* Play next audio file in queue */
+function playNext() {
+    if (audioQueue.length === 0) {
+        isAudioPlaying = false;
+        return;
+    }
+
+    isAudioPlaying = true;
+
+    const raw = audioQueue.shift();
+    const token = normalizeToken(raw);
+    if (!token) {
+        playNext();
+        return;
+    }
+
+    const file = AUDIO_BASE + token + ".ogg";
+    const audio = new Audio(file);
+
+    audio.onerror = () => {
+        console.warn("Missing audio file:", file);
+        playNext();
+    };
+
+    audio.onended = () => playNext();
+
+    audio.play().catch(() => playNext());
+}
+
+/* PUBLIC FUNCTION: play audio from Saga3 result */
+function playSaga3Audio() {
+    const saga1 = document.getElementById("saga1").textContent.trim();
+    if (!saga1) return;
+
+    // Example: ba-laa-la → ["ba","laa","la"]
+    audioQueue = saga1.split("-").filter(x => x.trim() !== "");
+
+    if (!isAudioPlaying) playNext();
+}
+</script>
+
 </body>
 </html>
